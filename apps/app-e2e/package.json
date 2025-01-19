@@ -1,0 +1,6 @@
+{
+  "name": "app-e2e",
+  "scripts": {
+    "test-e2e": "playwright test"
+  }
+}

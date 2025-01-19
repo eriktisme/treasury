@@ -1,0 +1,26 @@
+{
+  "name": "app",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "next build",
+    "dev": "next dev",
+    "lint": "next lint",
+    "start": "next start",
+    "test": "jest --passWithNoTests",
+    "test-coverage": "jest --coverage --passWithNoTests",
+    "typeCheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@clerk/backend": "^1.21.6",
+    "@clerk/nextjs": "^6.9.9",
+    "@t3-oss/env-nextjs": "^0.11.1",
+    "@internal/next-config": "workspace:*",
+    "@internal/tailwind-config": "workspace:*",
+    "@internal/seo": "workspace:*",
+    "svix": "^1.25.0"
+  },
+  "devDependencies": {
+    "@internal/tsconfig": "workspace:*"
+  }
+}

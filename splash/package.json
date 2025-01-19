@@ -1,0 +1,23 @@
+{
+  "name": "splash",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "next build",
+    "dev": "next dev --port 3001",
+    "lint": "next lint",
+    "start": "next start",
+    "test": "jest --passWithNoTests",
+    "test-coverage": "jest --coverage --passWithNoTests",
+    "typeCheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@t3-oss/env-nextjs": "^0.11.1",
+    "@internal/next-config": "workspace:*",
+    "@internal/seo": "workspace:*",
+    "@internal/tailwind-config": "workspace:*"
+  },
+  "devDependencies": {
+    "@internal/tsconfig": "workspace:*"
+  }
+}

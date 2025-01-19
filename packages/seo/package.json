@@ -1,0 +1,15 @@
+{
+  "name": "@internal/seo",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "lint": "eslint '**/*.ts'",
+    "typeCheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@internal/tsconfig": "workspace:*"
+  },
+  "peerDependencies": {
+    "next": "^15.0.3"
+  }
+}

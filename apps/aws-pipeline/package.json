@@ -1,0 +1,22 @@
+{
+  "name": "aws-pipeline",
+  "version": "0.1.0",
+  "bin": {
+    "app": "bin/app.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "cdk": "cdk",
+    "lint": "eslint '**/*.ts'",
+    "test": "jest --passWithNoTests",
+    "watch": "tsc -w"
+  },
+  "dependencies": {
+    "source-map-support": "^0.5.21"
+  },
+  "devDependencies": {
+    "@eriktisme/aws-cdk-github-action-integration": "^0.0.0",
+    "@internal/tsconfig": "workspace:*",
+    "@types/node": "20.14.9"
+  }
+}
