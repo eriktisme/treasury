@@ -19,6 +19,7 @@ on:
     branches:
       - master
     paths-ignore:
+      - apps/mobile
       - splash/**
 
 jobs:

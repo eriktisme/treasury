@@ -1,6 +1,6 @@
 import type { Config } from 'jest'
 
-process.env.POSTGRESS_URL_POOLING = ''
+process.env.DATABASE_URL = ''
 
 const config: Config = {
   moduleNameMapper: {

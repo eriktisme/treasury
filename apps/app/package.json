@@ -14,13 +14,21 @@
   "dependencies": {
     "@clerk/backend": "^1.21.6",
     "@clerk/nextjs": "^6.9.9",
-    "@t3-oss/env-nextjs": "^0.11.1",
     "@internal/next-config": "workspace:*",
-    "@internal/tailwind-config": "workspace:*",
     "@internal/seo": "workspace:*",
-    "svix": "^1.25.0"
+    "@internal/tailwind-config": "workspace:*",
+    "@t3-oss/env-nextjs": "^0.11.1",
+    "next": "^15.1.4",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-hook-form": "^7.52.1",
+    "server-only": "^0.0.1",
+    "svix": "^1.25.0",
+    "tailwind-merge": "^2.6.0"
   },
   "devDependencies": {
-    "@internal/tsconfig": "workspace:*"
+    "@internal/tsconfig": "workspace:*",
+    "@types/react": "^19.0.4",
+    "@types/react-dom": "^19.0.2"
   }
 }

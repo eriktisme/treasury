@@ -1,0 +1,26 @@
+{
+  "expo": {
+    "experiments": {
+      "reactCanary": true,
+      "typedRoutes": true,
+      "reactServerActions": true
+    },
+    "icon": "./assets/icon.png",
+    "ios": {
+      "supportsTablet": true
+    },
+    "name": "treasury",
+    "newArchEnabled": true,
+    "orientation": "portrait",
+    "plugins": ["expo-router"],
+    "scheme": "treasury",
+    "slug": "treasury",
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "userInterfaceStyle": "light",
+    "version": "0.1.0"
+  }
+}
