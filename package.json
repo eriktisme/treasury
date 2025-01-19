@@ -3,7 +3,8 @@
   "scripts": {
     "build": "turbo build --parallel",
     "build:splash": "turbo build --filter=splash",
-    "cdk": "turbo cdk",
+    "cdk": "turbo cdk --parallel",
+    "cdk:api": "turbo cdk --filter=api",
     "dev": "turbo dev --parallel",
     "dev:app": "turbo dev --filter=app",
     "dev:splash": "turbo dev --filter=splash",

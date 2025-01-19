@@ -18,6 +18,11 @@
       "dependsOn": ["^build"],
       "outputs": [".next/**", "!.next/cache/**", "next-env.d.ts"]
     },
+    "cdk": {
+      "inputs": ["$TURBO_DEFAULT$", ".env"],
+      "cache": true,
+      "outputs": ["cdk.out"]
+    },
     "dev": {
       "inputs": ["$TURBO_DEFAULT$", ".env"],
       "persistent": true,
