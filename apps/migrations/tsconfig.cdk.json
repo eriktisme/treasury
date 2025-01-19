@@ -5,6 +5,6 @@
     "module": "NodeNext",
     "moduleResolution": "NodeNext"
   },
-  "include": ["bin", "lib", "constructs", "src"],
+  "include": ["bin", "constructs", "src", "migrations"],
   "exclude": ["cdk.out", "node_modules"]
 }

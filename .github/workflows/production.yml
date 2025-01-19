@@ -112,6 +112,12 @@ jobs:
           role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/treasury-deploy-role
           aws-region: eu-west-1
 
+      - run: pnpm cdk:migrations -- deploy --all --require-approval never
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          CLERK_SECRET_KEY: ${{ secrets.CLERK_SECRET_KEY }}
+          CLERK_PUBLISHABLE_KEY: ${{ secrets.CLERK_PUBLISHABLE_KEY }}
+
       - run: pnpm cdk:api -- deploy --all --require-approval never
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}

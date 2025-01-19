@@ -5,6 +5,7 @@
     "build:splash": "turbo build --filter=splash",
     "cdk": "turbo cdk --parallel",
     "cdk:api": "turbo cdk --filter=api",
+    "cdk:migrations": "turbo cdk --filter=migrations",
     "dev": "turbo dev --parallel",
     "dev:app": "turbo dev --filter=app",
     "dev:splash": "turbo dev --filter=splash",
