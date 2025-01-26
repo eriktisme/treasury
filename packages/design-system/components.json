@@ -15,5 +15,6 @@
     "hooks": "@internal/design-system/hooks",
     "lib": "@internal/design-system/lib",
     "ui": "@internal/design-system/components/ui"
-  }
+  },
+  "iconLibrary": "lucide"
 }
