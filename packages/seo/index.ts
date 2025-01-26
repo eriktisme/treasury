@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 
-type MetadataGenerator = Omit<Metadata, 'description' | 'title'> & {
+export type MetadataGenerator = Omit<Metadata, 'description' | 'title'> & {
   description?: string
   image?: string
   title?: string

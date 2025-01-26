@@ -6,7 +6,7 @@ import { useCallback } from 'react'
 import { useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useAuth } from '@clerk/nextjs'
-import { generateSignInToken } from '@/features/sign-in'
+import { generateSignInToken } from '@/lib/sign-in-token'
 
 const IsLoggedIn = (props: Readonly<PropsWithChildren>) => {
   const router = useRouter()
