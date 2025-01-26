@@ -1,11 +1,11 @@
 'use client'
 
-import { SignInForm } from '../components'
-import { GalleryVerticalEnd } from 'lucide-react'
+import { SignUpForm } from '../components'
 import Link from 'next/link'
+import { GalleryVerticalEnd } from 'lucide-react'
 import { Suspense } from 'react'
 
-export const SignInPageTemplate = () => {
+export const SignUpPageTemplate = () => {
   return (
     <div className="flex w-full max-w-xs flex-col gap-6">
       <Link
@@ -18,7 +18,7 @@ export const SignInPageTemplate = () => {
         Acme Inc.
       </Link>
       <Suspense>
-        <SignInForm />
+        <SignUpForm />
       </Suspense>
     </div>
   )

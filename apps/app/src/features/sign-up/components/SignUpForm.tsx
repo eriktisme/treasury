@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { useSignIn } from '@clerk/nextjs'
+import { useSignUp } from '@clerk/nextjs'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -24,13 +24,13 @@ const FormSchema = z.object({
 
 type FormValues = z.infer<typeof FormSchema>
 
-export const SignInForm = () => {
-  const [status, setStatus] = useState<'sign-in' | 'email-sent'>('sign-in')
+export const SignUpForm = () => {
+  const [status, setStatus] = useState<'sign-up' | 'email-sent'>('sign-up')
 
   const [isPending, startTransition] = useTransition()
   const router = useRouter()
 
-  const { isLoaded, setActive, signIn } = useSignIn()
+  const { isLoaded, setActive, signUp } = useSignUp()
   const searchParams = useSearchParams()
   const redirectUrl = searchParams.get('redirect_url')
 
@@ -46,30 +46,18 @@ export const SignInForm = () => {
       return
     }
 
-    const { startEmailLinkFlow } = signIn.createEmailLinkFlow()
+    const { startEmailLinkFlow } = signUp.createEmailLinkFlow()
 
     startTransition(async () => {
       try {
-        const signInAttempt = await signIn.create({
-          identifier: values.identifier,
+        await signUp.create({
+          emailAddress: values.identifier,
         })
 
-        // Start the sign-in flow, by collecting the user's email address.
-        const signInFirstFactor = signInAttempt.supportedFirstFactors?.find(
-          (ff) =>
-            ff.strategy === 'email_link' &&
-            ff.safeIdentifier === values.identifier
-        )
-
-        if (!signInFirstFactor || signInFirstFactor.strategy !== 'email_link') {
-          // Handle errors
-          return
-        }
-
+        // Start the sign-up flow, by collecting the user's email address.
         setStatus('email-sent')
 
         const result = await startEmailLinkFlow({
-          emailAddressId: signInFirstFactor.emailAddressId,
           redirectUrl: `${window.location.origin}/auth/verification`,
         })
 
@@ -94,11 +82,9 @@ export const SignInForm = () => {
 
   return (
     <>
-      {status === 'sign-in' ? (
+      {status === 'sign-up' ? (
         <div className="flex flex-col gap-6">
-          <h1 className="text-center">
-            Welcome back, what is your email address?
-          </h1>
+          <h1 className="text-center">Create your account</h1>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSignIn)}>
               <div className="grid gap-6">
@@ -120,16 +106,31 @@ export const SignInForm = () => {
                     )}
                   />
                 </div>
-                <Button loading={isPending} type="submit" className="w-full">
-                  Continue with email
-                </Button>
+                <div>
+                  {/* CAPTCHA Widget */}
+                  <div id="clerk-captcha"></div>
+                  <Button loading={isPending} type="submit" className="w-full">
+                    Continue with email
+                  </Button>
+                </div>
                 <div className="text-center text-sm">
-                  Don&apos;t have an account?{' '}
+                  By Signing up, you agree to our{' '}
+                  <Link href="#" className="underline underline-offset-4">
+                    Terms of Service
+                  </Link>{' '}
+                  and{' '}
+                  <Link href="#" className="underline underline-offset-4">
+                    Data Processing Agreement
+                  </Link>
+                  .
+                </div>
+                <div className="text-center text-sm">
+                  Already have an account?{' '}
                   <Link
-                    href="/auth/sign-up"
+                    href="/auth/sign-in"
                     className="underline underline-offset-4"
                   >
-                    Sign up
+                    Log in
                   </Link>
                 </div>
               </div>
