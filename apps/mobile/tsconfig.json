@@ -2,7 +2,10 @@
   "extends": "expo/tsconfig.base",
   "jsx": "react-jsx",
   "compilerOptions": {
-    "typeRoots": ["expo-router/ts-declarations"]
+    "typeRoots": ["expo-router/ts-declarations"],
+    "paths": {
+      "@/*": ["./*"]
+    }
   },
   "include": ["**/*.ts", "**/*.tsx", ".expo/types/**/*.ts", "expo-env.d.ts"]
 }

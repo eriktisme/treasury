@@ -11,9 +11,7 @@
     "next-secure-headers": "^2.2.0"
   },
   "devDependencies": {
-    "@internal/tsconfig": "workspace:*"
-  },
-  "peerDependencies": {
+    "@internal/tsconfig": "workspace:*",
     "next": "^15.1.4"
   }
 }

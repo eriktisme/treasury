@@ -1,13 +1,25 @@
-import dynamic from 'next/dynamic'
+'use client'
 
-const SignInForm = dynamic(() =>
-  import('@clerk/nextjs').then((mod) => mod.SignIn)
-)
+import { SignInForm } from '../components'
+import { GalleryVerticalEnd } from 'lucide-react'
+import Link from 'next/link'
+import { Suspense } from 'react'
 
 export const SignInPageTemplate = () => {
   return (
-    <div className="flex flex-col gap-12">
-      <SignInForm />
+    <div className="flex w-full max-w-sm flex-col gap-6">
+      <Link
+        href="#"
+        className="flex items-center gap-2 self-center font-medium"
+      >
+        <div className="bg-primary text-primary-foreground flex h-6 w-6 items-center justify-center rounded-md">
+          <GalleryVerticalEnd className="size-4" />
+        </div>
+        Acme Inc.
+      </Link>
+      <Suspense>
+        <SignInForm />
+      </Suspense>
     </div>
   )
 }
