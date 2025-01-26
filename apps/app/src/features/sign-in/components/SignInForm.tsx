@@ -120,7 +120,12 @@ export const SignInForm = () => {
                     )}
                   />
                 </div>
-                <Button loading={isPending} type="submit" className="w-full">
+                <Button
+                  disabled={!form.formState.isValid}
+                  loading={isPending}
+                  type="submit"
+                  className="w-full"
+                >
                   Continue with email
                 </Button>
                 <div className="text-center text-sm">
