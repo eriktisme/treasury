@@ -1,38 +1,12 @@
 'use client'
 
-import { useClerk } from '@clerk/nextjs'
-import { useCallback, useEffect, useState } from 'react'
+import { Suspense } from 'react'
+import { Verification } from '../components'
 
 export const VerificationPageTemplate = () => {
-  const [verificationStatus, setVerificationStatus] = useState('loading')
-
-  const { handleEmailLinkVerification } = useClerk()
-
-  const verify = useCallback(async () => {
-    try {
-      await handleEmailLinkVerification({
-        //
-      })
-
-      setVerificationStatus('verified')
-    } catch (err) {
-      setVerificationStatus('failed')
-    }
-  }, [handleEmailLinkVerification])
-
-  useEffect(() => {
-    void verify()
-  }, [verify])
-
-  if (verificationStatus === 'loading') {
-    return <div>Loading...</div>
-  }
-
-  if (verificationStatus === 'failed') {
-    return <div>Email link verification failed</div>
-  }
-
   return (
-    <div>Successfully signed in. Return to the original tab to continue.</div>
+    <Suspense>
+      <Verification />
+    </Suspense>
   )
 }

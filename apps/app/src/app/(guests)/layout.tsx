@@ -1,6 +1,7 @@
 'use client'
 
 import type { PropsWithChildren } from 'react'
+import { Suspense } from 'react'
 import { useCallback } from 'react'
 import { useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
@@ -8,7 +9,7 @@ import { useAuth } from '@clerk/nextjs'
 import { env } from '@/env'
 import { generateSignInToken } from '@/features/sign-in'
 
-export default function Layout(props: Readonly<PropsWithChildren>) {
+const IsLoggedIn = () => {
   const router = useRouter()
   const searchParams = useSearchParams()
   const redirectUrl = searchParams.get('redirect_url')
@@ -31,10 +32,6 @@ export default function Layout(props: Readonly<PropsWithChildren>) {
    * or when there is no redirect url, redirect to the default after sign in url.
    */
   useEffect(() => {
-    if (!redirectUrl) {
-      return
-    }
-
     if (isSignedIn && sessionId) {
       void redirectToRedirectUrl(sessionId)
     }
@@ -44,9 +41,16 @@ export default function Layout(props: Readonly<PropsWithChildren>) {
     return <div>Loading ...</div>
   }
 
+  return <></>
+}
+
+export default function Layout(props: Readonly<PropsWithChildren>) {
   return (
-    <div className="bg-muted flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10">
-      {props.children}
-    </div>
+    <Suspense>
+      <IsLoggedIn />
+      <div className="bg-muted flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10">
+        {props.children}
+      </div>
+    </Suspense>
   )
 }

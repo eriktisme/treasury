@@ -31,7 +31,7 @@ const FormSchema = z.object({
 type FormValues = z.infer<typeof FormSchema>
 
 export const SignInForm = () => {
-  const [isPending, startTransition] = useTransition()
+  const [_, startTransition] = useTransition()
   const router = useRouter()
 
   const { isLoaded, setActive, signIn } = useSignIn()

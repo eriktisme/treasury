@@ -1,6 +1,9 @@
+'use client'
+
 import { SignInForm } from '../components'
 import { GalleryVerticalEnd } from 'lucide-react'
 import Link from 'next/link'
+import { Suspense } from 'react'
 
 export const SignInPageTemplate = () => {
   return (
@@ -14,7 +17,9 @@ export const SignInPageTemplate = () => {
         </div>
         Acme Inc.
       </Link>
-      <SignInForm />
+      <Suspense>
+        <SignInForm />
+      </Suspense>
     </div>
   )
 }
