@@ -84,7 +84,7 @@ export const SignInForm = () => {
             return
           }
 
-          router.push('/dashboard')
+          router.push('/')
         }
       } catch {
         // Handle errors

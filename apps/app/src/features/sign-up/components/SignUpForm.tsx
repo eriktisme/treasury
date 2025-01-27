@@ -72,7 +72,7 @@ export const SignUpForm = () => {
             return
           }
 
-          router.push('/dashboard')
+          router.push('/')
         }
       } catch {
         // Handle errors
