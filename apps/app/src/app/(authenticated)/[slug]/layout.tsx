@@ -5,5 +5,5 @@ export default function Layout({
 }: Readonly<{
   children: ReactNode
 }>) {
-  return <>{children}</>
+  return <div className="min-h-svh bg-neutral-50">{children}</div>
 }

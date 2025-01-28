@@ -14,6 +14,9 @@ import {
 import { useTransition } from 'react'
 import { Input } from '@internal/design-system/components/ui/input'
 import { Button } from '@internal/design-system/components/ui/button'
+import { useAuth, useOrganizationList } from '@clerk/nextjs'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { generateSignInToken } from '@/lib/sign-in-token'
 
 const FormSchema = z.object({
   name: z.string().min(1),
@@ -22,7 +25,15 @@ const FormSchema = z.object({
 type FormValues = z.infer<typeof FormSchema>
 
 export const CreateWorkspaceForm = () => {
+  const router = useRouter()
+
+  const { sessionId } = useAuth()
+  const { createOrganization, isLoaded, setActive } = useOrganizationList()
+
   const [isPending, startTransition] = useTransition()
+
+  const searchParams = useSearchParams()
+  const redirectUrl = searchParams.get('redirectUrl')
 
   const form = useForm<FormValues>({
     resolver: zodResolver(FormSchema),
@@ -31,9 +42,27 @@ export const CreateWorkspaceForm = () => {
     },
   })
 
-  const onCreateWorkspace = async (_: FormValues) => {
+  const onCreateWorkspace = async (values: FormValues) => {
+    if (!isLoaded) {
+      return
+    }
+
     startTransition(async () => {
-      // Create the workspace
+      const organization = await createOrganization({ name: values.name })
+
+      await setActive({
+        organization: organization.id,
+      })
+
+      if (redirectUrl && sessionId) {
+        const token = await generateSignInToken(sessionId)
+
+        router.push(`${redirectUrl}?token=${token}&orgId=${organization.id}`)
+
+        return
+      }
+
+      router.push(`/${organization.slug}`)
     })
   }
 

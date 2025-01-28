@@ -1,4 +1,5 @@
 import { CreateWorkspaceForm, LoggedInAs, LogOutButton } from '../components'
+import { Suspense } from 'react'
 
 export const CreateWorkspacePageTemplate = () => {
   return (
@@ -10,7 +11,9 @@ export const CreateWorkspacePageTemplate = () => {
       }}
     >
       <div className="flex flex-auto flex-col items-center justify-center overflow-x-hidden py-12">
-        <CreateWorkspaceForm />
+        <Suspense>
+          <CreateWorkspaceForm />
+        </Suspense>
       </div>
       <div className="fixed right-6 top-6">
         <LoggedInAs />

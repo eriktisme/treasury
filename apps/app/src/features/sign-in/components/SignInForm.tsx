@@ -16,7 +16,6 @@ import {
 } from '@internal/design-system/components/ui/form'
 import { Input } from '@internal/design-system/components/ui/input'
 import { EmailSent } from './EmailSent'
-import { generateSignInToken } from '@/lib/sign-in-token'
 
 const FormSchema = z.object({
   identifier: z.string().email(),
@@ -32,7 +31,7 @@ export const SignInForm = () => {
 
   const { isLoaded, setActive, signIn } = useSignIn()
   const searchParams = useSearchParams()
-  const redirectUrl = searchParams.get('redirect_url')
+  const redirectUrl = searchParams.get('redirectUrl')
 
   const form = useForm<FormValues>({
     resolver: zodResolver(FormSchema),
@@ -76,10 +75,8 @@ export const SignInForm = () => {
         if (result.status === 'complete' && result.createdSessionId) {
           await setActive({ session: result.createdSessionId })
 
-          const token = await generateSignInToken(result.createdSessionId)
-
           if (redirectUrl) {
-            router.push(`${redirectUrl}?token=${token}`)
+            router.push(`/?redirectUrl=${redirectUrl}`)
 
             return
           }
