@@ -17,7 +17,7 @@ export const GetStartedButton = () => {
     })
 
     const result = await WebBrowser.openAuthSessionAsync(
-      `${process.env.EXPO_PUBLIC_APP_URL}/auth/sign-in?redirect_url=${redirectUrl}`
+      `${process.env.EXPO_PUBLIC_APP_URL}/auth/sign-in?redirectUrl=${redirectUrl}`
     )
 
     if (result.type === 'success') {

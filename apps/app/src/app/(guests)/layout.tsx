@@ -10,8 +10,10 @@ import { generateSignInToken } from '@/lib/sign-in-token'
 
 const IsLoggedIn = (props: Readonly<PropsWithChildren>) => {
   const router = useRouter()
+
   const searchParams = useSearchParams()
-  const redirectUrl = searchParams.get('redirect_url')
+  const redirectUrl = searchParams.get('redirectUrl')
+
   const { isLoaded, isSignedIn, sessionId } = useAuth()
 
   const redirectToRedirectUrl = useCallback(
