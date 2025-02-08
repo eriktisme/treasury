@@ -8,20 +8,11 @@
       }
     ],
     "paths": {
-      "@internal/*": [
-        "../*"
-      ],
-      "@internal/design-system/*": [
-        "./*"
-      ]
+      "@internal/*": ["../*"],
+      "@internal/design-system/*": ["./*"]
     }
   },
-  "exclude": [
-    "node_modules"
-  ],
+  "exclude": ["node_modules"],
   "extends": "@internal/tsconfig/react-library.json",
-  "include": [
-    "**/*.ts",
-    "**/*.tsx"
-  ]
+  "include": ["**/*.ts", "**/*.tsx"]
 }
