@@ -6,19 +6,19 @@ import {
   SidebarRail,
 } from '@internal/design-system/components/ui/sidebar'
 import type { ComponentProps } from 'react'
-import { GalleryVerticalEnd } from 'lucide-react'
-import Link from 'next/link'
+import { WorkspaceSwitcher } from './WorkspaceSwitcher'
+import type { Organization, User } from '@clerk/backend'
 
-export const AppSidebar = ({ ...props }: ComponentProps<typeof Sidebar>) => {
+interface Props extends ComponentProps<typeof Sidebar> {
+  user: User | null
+  workspaces: Organization[]
+}
+
+export const AppSidebar = ({ user, workspaces, ...props }: Props) => {
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-        <Link href="#" className="flex items-center gap-2 font-medium">
-          <div className="flex h-6 w-6 items-center justify-center rounded-md">
-            <GalleryVerticalEnd className="size-4" />
-          </div>
-          Acme Inc.
-        </Link>
+        <WorkspaceSwitcher user={user} workspaces={workspaces} />
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>{/* Placeholder */}</SidebarGroup>
