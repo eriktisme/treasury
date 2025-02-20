@@ -13,7 +13,12 @@ import {
 } from '@internal/design-system/components/ui/sidebar'
 import type { ComponentProps } from 'react'
 import { Protect, useOrganization } from '@clerk/nextjs'
-import { BuildingIcon, ChevronLeftIcon, Settings2Icon } from 'lucide-react'
+import {
+  BuildingIcon,
+  ChevronLeftIcon,
+  Settings2Icon,
+  UsersIcon,
+} from 'lucide-react'
 import {
   Tooltip,
   TooltipContent,
@@ -23,6 +28,22 @@ import {
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
+const adminRoutes = [
+  {
+    key: 'workspace',
+    label: 'Workspace',
+    icon: <BuildingIcon />,
+  },
+]
+
+const accountRoutes = [
+  {
+    key: 'preferences',
+    label: 'Preferences',
+    icon: <Settings2Icon />,
+  },
+]
+
 interface Props extends ComponentProps<typeof Sidebar> {
   //
 }
@@ -30,9 +51,6 @@ interface Props extends ComponentProps<typeof Sidebar> {
 export const SettingsSidebar = (props: Props) => {
   const pathname = usePathname()
   const { organization } = useOrganization()
-
-  const accountPreferencesPath = `/${organization?.slug}/settings/account/preferences`
-  const workspacePath = `/${organization?.slug}/settings/workspace`
 
   return (
     <Sidebar {...props} className="w-60">
@@ -64,30 +82,38 @@ export const SettingsSidebar = (props: Props) => {
           <SidebarGroupLabel>Account</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              <SidebarMenuItem>
-                <Link href={accountPreferencesPath}>
-                  <SidebarMenuButton
-                    isActive={accountPreferencesPath === pathname}
-                  >
-                    <Settings2Icon />
-                    <span>Preferences</span>
-                  </SidebarMenuButton>
-                </Link>
-              </SidebarMenuItem>
+              {accountRoutes.map((route) => {
+                const currentPath = `/${organization?.slug}/settings/${route.key}`
+                return (
+                  <SidebarMenuItem key={`route-${route.key}`}>
+                    <Link href={currentPath}>
+                      <SidebarMenuButton isActive={currentPath === pathname}>
+                        {route.icon}
+                        <span>{route.label}</span>
+                      </SidebarMenuButton>
+                    </Link>
+                  </SidebarMenuItem>
+                )
+              })}
             </SidebarMenu>
           </SidebarGroupContent>
           <Protect role="org:admin">
             <SidebarGroupLabel>Administration</SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
-                <SidebarMenuItem>
-                  <Link href={workspacePath}>
-                    <SidebarMenuButton isActive={workspacePath === pathname}>
-                      <BuildingIcon />
-                      <span>Workspace</span>
-                    </SidebarMenuButton>
-                  </Link>
-                </SidebarMenuItem>
+                {adminRoutes.map((route) => {
+                  const currentPath = `/${organization?.slug}/settings/${route.key}`
+                  return (
+                    <SidebarMenuItem key={`route-${route.key}`}>
+                      <Link href={currentPath}>
+                        <SidebarMenuButton isActive={currentPath === pathname}>
+                          {route.icon}
+                          <span>{route.label}</span>
+                        </SidebarMenuButton>
+                      </Link>
+                    </SidebarMenuItem>
+                  )
+                })}
               </SidebarMenu>
             </SidebarGroupContent>
           </Protect>
