@@ -3,6 +3,7 @@ import type { PropsWithChildren } from 'react'
 import { ClerkLoaded, ClerkLoading, ClerkProvider } from '@clerk/nextjs'
 import { Loader2Icon } from 'lucide-react'
 import { createMetadata } from '@internal/seo'
+import { DesignSystemProvider } from '@internal/design-system'
 
 export const metadata = createMetadata({
   // Add metadata here
@@ -21,7 +22,9 @@ export default function RootLayout({ children }: Readonly<PropsWithChildren>) {
               </div>
             </div>
           </ClerkLoading>
-          <ClerkLoaded>{children}</ClerkLoaded>
+          <ClerkLoaded>
+            <DesignSystemProvider>{children}</DesignSystemProvider>
+          </ClerkLoaded>
         </body>
       </html>
     </ClerkProvider>

@@ -56,7 +56,7 @@ export const WorkspaceSwitcher = (props: Props) => {
           <DropdownMenuTrigger asChild>
             <SidebarMenuButton
               size="lg"
-              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground h-auto"
+              className="data-[state=open]:bg-neutral-50-accent data-[state=open]:text-sidebar-accent-foreground h-auto"
             >
               <Avatar className="size-6 rounded-lg">
                 <AvatarImage
@@ -82,6 +82,13 @@ export const WorkspaceSwitcher = (props: Props) => {
             sideOffset={4}
           >
             <DropdownMenuSub>
+              <Link href={`/${activeWorkspace?.slug}/settings/account`}>
+                <DropdownMenuItem>
+                  <span className="flex-1">Settings</span>
+                  <DropdownMenuShortcut>G then S</DropdownMenuShortcut>
+                </DropdownMenuItem>
+              </Link>
+              <DropdownMenuSeparator />
               <DropdownMenuSubTrigger>
                 <span className="flex-1">Switch workspace</span>
                 <DropdownMenuShortcut>O then W</DropdownMenuShortcut>
