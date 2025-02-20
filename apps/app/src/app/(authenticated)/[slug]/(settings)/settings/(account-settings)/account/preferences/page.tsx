@@ -1,3 +1,5 @@
+import { AccountPreferencesPageTemplate } from '@/features/account-preferences'
+
 export default function Page() {
-  return <div>Account settings placeholder</div>
+  return <AccountPreferencesPageTemplate />
 }

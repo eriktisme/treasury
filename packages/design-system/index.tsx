@@ -1,10 +1,12 @@
 import { TooltipProvider } from './components/ui/tooltip'
-import { PropsWithChildren } from 'react'
+import { ThemeProvider, ThemeProviderProps } from 'next-themes'
 
-interface Props extends PropsWithChildren {
+interface Props extends ThemeProviderProps {
   //
 }
 
-export const DesignSystemProvider = ({ children }: Readonly<Props>) => (
-  <TooltipProvider>{children}</TooltipProvider>
+export const DesignSystemProvider = ({ children, ...props }: Readonly<Props>) => (
+  <ThemeProvider {...props}>
+    <TooltipProvider>{children}</TooltipProvider>
+  </ThemeProvider>
 )
