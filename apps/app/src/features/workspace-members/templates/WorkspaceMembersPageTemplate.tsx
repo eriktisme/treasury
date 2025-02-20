@@ -9,7 +9,7 @@ interface Props {
 export const WorkspaceMembersPageTemplate = (_: Props) => {
   return (
     <div
-      className="relative mx-auto flex min-h-svh w-full max-w-4xl flex-col overflow-hidden p-6 md:p-10"
+      className="relative mx-auto flex w-full max-w-4xl flex-col overflow-hidden p-6 md:p-10"
       style={{
         overscrollBehavior: 'contain',
         scrollbarGutter: 'stable',

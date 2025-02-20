@@ -21,6 +21,10 @@ export default async function Page(props: Props) {
 
   const { orgId } = await auth()
 
+  if (!orgId) {
+    return null
+  }
+
   const response = await client.users.getUserList({
     organizationId: [orgId],
     query: query.length >= 3 ? query : '',

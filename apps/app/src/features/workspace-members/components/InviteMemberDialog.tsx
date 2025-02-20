@@ -22,6 +22,8 @@ import {
   FormMessage,
 } from '@internal/design-system/components/ui/form'
 import { Input } from '@internal/design-system/components/ui/input'
+import { toast } from 'sonner'
+import type { ClerkAPIError } from '@clerk/types'
 
 const FormSchema = z.object({
   email: z.string().email(),
@@ -53,14 +55,31 @@ export const InviteMemberDialog = () => {
     }
 
     startTransition(async () => {
-      await organization.inviteMembers({
-        emailAddresses: [values.email],
-        role: 'org:admin',
-      })
+      try {
+        await organization.inviteMembers({
+          emailAddresses: [values.email],
+          role: 'org:admin',
+        })
+      } catch (e) {
+        const err = e as Error
+        if ('errors' in err) {
+          const apiError = (err.errors as ClerkAPIError[])[0]
+
+          if (apiError.code === 'already_a_member_in_organization') {
+            toast.error('Member already part of the workspace')
+          }
+        }
+
+        return
+      }
 
       form.reset()
 
       setInviting(false)
+
+      toast.message('User invited', {
+        description: 'Invited users have been notified by email.',
+      })
     })
   }
 

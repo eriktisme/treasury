@@ -3,7 +3,7 @@ import { ExploreFeatures } from '../components'
 export const WorkspaceFeaturesExplorerPageTemplate = () => {
   return (
     <div
-      className="relative flex min-h-svh flex-col overflow-hidden p-6 md:p-10"
+      className="relative flex flex-col overflow-hidden p-6 md:p-10"
       style={{
         overscrollBehavior: 'contain',
         scrollbarGutter: 'stable',
