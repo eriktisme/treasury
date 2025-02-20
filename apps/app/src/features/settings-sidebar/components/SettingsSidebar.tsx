@@ -34,6 +34,11 @@ const adminRoutes = [
     label: 'Workspace',
     icon: <BuildingIcon />,
   },
+  {
+    key: 'members',
+    label: 'Members',
+    icon: <UsersIcon />,
+  },
 ]
 
 const accountRoutes = [
