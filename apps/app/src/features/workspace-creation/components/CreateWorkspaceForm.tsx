@@ -68,8 +68,10 @@ export const CreateWorkspaceForm = () => {
 
   return (
     <>
-      <h1 className="mb-6 text-center">Create a new workspace</h1>
-      <p className="mb-8 max-w-md text-center">
+      <h1 className="mb-6 text-center text-2xl font-medium">
+        Create a new workspace
+      </h1>
+      <p className="mb-8 max-w-md text-center text-base">
         Workspaces are shared environments where teams can work together.
       </p>
       <Form {...form}>

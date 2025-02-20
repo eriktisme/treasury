@@ -1,3 +1,5 @@
+'use client'
+
 import {
   Sidebar,
   SidebarContent,
@@ -6,22 +8,32 @@ import {
   SidebarMenu,
   SidebarMenuItem,
   SidebarMenuButton,
+  SidebarGroupLabel,
+  SidebarGroupContent,
 } from '@internal/design-system/components/ui/sidebar'
 import type { ComponentProps } from 'react'
-import { Protect } from '@clerk/nextjs'
-import { ChevronLeftIcon } from 'lucide-react'
+import { Protect, useOrganization } from '@clerk/nextjs'
+import { BuildingIcon, ChevronLeftIcon, Settings2Icon } from 'lucide-react'
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
   TooltipShortcut,
 } from '@internal/design-system/components/ui/tooltip'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 
 interface Props extends ComponentProps<typeof Sidebar> {
   //
 }
 
 export const SettingsSidebar = (props: Props) => {
+  const pathname = usePathname()
+  const { organization } = useOrganization()
+
+  const accountPreferencesPath = `/${organization?.slug}/settings/account/preferences`
+  const workspacePath = `/${organization?.slug}/settings/workspace`
+
   return (
     <Sidebar {...props} className="w-60">
       <SidebarHeader>
@@ -48,10 +60,38 @@ export const SettingsSidebar = (props: Props) => {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <SidebarGroup>{/* Placeholder */}</SidebarGroup>
-        <Protect role="org:admin">
-          <SidebarGroup>{/* Placeholder */}</SidebarGroup>
-        </Protect>
+        <SidebarGroup>
+          <SidebarGroupLabel>Account</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <Link href={accountPreferencesPath}>
+                  <SidebarMenuButton
+                    isActive={accountPreferencesPath === pathname}
+                  >
+                    <Settings2Icon />
+                    <span>Preferences</span>
+                  </SidebarMenuButton>
+                </Link>
+              </SidebarMenuItem>
+            </SidebarMenu>
+          </SidebarGroupContent>
+          <Protect role="org:admin">
+            <SidebarGroupLabel>Administration</SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                <SidebarMenuItem>
+                  <Link href={workspacePath}>
+                    <SidebarMenuButton isActive={workspacePath === pathname}>
+                      <BuildingIcon />
+                      <span>Workspace</span>
+                    </SidebarMenuButton>
+                  </Link>
+                </SidebarMenuItem>
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </Protect>
+        </SidebarGroup>
       </SidebarContent>
     </Sidebar>
   )

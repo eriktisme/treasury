@@ -56,7 +56,7 @@ export const WorkspaceSwitcher = (props: Props) => {
           <DropdownMenuTrigger asChild>
             <SidebarMenuButton
               size="lg"
-              className="data-[state=open]:bg-neutral-50-accent data-[state=open]:text-sidebar-accent-foreground h-auto"
+              className="h-auto data-[state=open]:bg-neutral-200/75 data-[state=open]:text-neutral-900"
             >
               <Avatar className="size-6 rounded-lg">
                 <AvatarImage

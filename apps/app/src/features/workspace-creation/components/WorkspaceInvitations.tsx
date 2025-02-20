@@ -16,7 +16,9 @@ interface Props {
 export const WorkspaceInvitations = (props: Props) => {
   return (
     <>
-      <h1 className="mb-6 text-center">You have access to these workspaces</h1>
+      <h1 className="mb-6 text-center text-2xl font-medium">
+        You have access to these workspaces
+      </h1>
       <div className="w-full max-w-[480px] text-center">
         <Card className="mb-8 text-left">
           <CardContent className="p-6">

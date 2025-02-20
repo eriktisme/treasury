@@ -1,3 +1,5 @@
+import { WorkspaceFeaturesExplorerPageTemplate } from '@/features/workspace-features-explorer'
+
 export default function Page() {
-  return <div>Workspace settings placeholder</div>
+  return <WorkspaceFeaturesExplorerPageTemplate />
 }
