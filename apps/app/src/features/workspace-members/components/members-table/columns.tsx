@@ -1,53 +1,82 @@
 'use client'
 
 import type { ColumnDef } from '@tanstack/react-table'
-import type { User } from '@clerk/backend'
 import { formatDistance } from 'date-fns/formatDistance'
 import {
   Avatar,
   AvatarFallback,
   AvatarImage,
 } from '@internal/design-system/components/ui/avatar'
+import { SelectRole } from '../SelectRole'
+import type {
+  OrganizationCustomRoleKey,
+  OrganizationMembershipResource,
+  RoleResource,
+  UserResource,
+} from '@clerk/types'
 
-export const getColumns = (): Array<ColumnDef<User>> => [
+interface GetColumnsParams {
+  currentUser: UserResource
+  roles: RoleResource[]
+}
+
+export const getColumns = (
+  params: GetColumnsParams
+): Array<ColumnDef<OrganizationMembershipResource>> => [
   {
     accessorKey: 'fullName',
     header: () => <div>Name</div>,
     cell: ({ row }) => {
-      const member = row.original
-
-      const displayName =
-        member.fullName || member.emailAddresses?.at(0)?.emailAddress
+      const member = row.original.publicUserData
 
       return (
         <div className="flex w-full items-center gap-4">
           <Avatar className="rounded-full">
             {member.imageUrl ? (
-              <AvatarImage src={member.imageUrl} alt={displayName} />
+              <AvatarImage src={member.imageUrl} alt={member.identifier} />
             ) : null}
-            <AvatarFallback>{displayName}</AvatarFallback>
+            <AvatarFallback>{member.identifier}</AvatarFallback>
           </Avatar>
           <div className="flex flex-col">
-            <span>{displayName}</span>
+            <span>{member.identifier}</span>
           </div>
         </div>
       )
     },
   },
   {
-    accessorKey: 'lastActiveAt',
-    header: () => <div>Last active</div>,
+    accessorKey: 'role',
+    header: () => <div>Role</div>,
     cell: ({ row }) => {
       const member = row.original
 
-      if (!member.lastActiveAt) {
-        return 'Never'
-      }
+      return (
+        <SelectRole
+          disabled={member.publicUserData.userId === params.currentUser.id}
+          onChange={async (role) => {
+            await member.update({
+              role: role as OrganizationCustomRoleKey,
+            })
+            await member?.reload()
+          }}
+          value={member.role as OrganizationCustomRoleKey}
+          options={params.roles.map(
+            (role) => role.key as OrganizationCustomRoleKey
+          )}
+        />
+      )
+    },
+  },
+  {
+    accessorKey: 'joined',
+    header: () => <div>Joined</div>,
+    cell: ({ row }) => {
+      const member = row.original
 
       return (
         <span>
-          {formatDistance(new Date(member.lastActiveAt), new Date(), {
-            addSuffix: false,
+          {formatDistance(new Date(member.createdAt), new Date(), {
+            addSuffix: true,
           })}
         </span>
       )

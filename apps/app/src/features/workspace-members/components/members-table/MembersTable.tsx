@@ -1,6 +1,5 @@
 'use client'
 
-import type { User } from '@clerk/backend'
 import { getColumns } from './columns'
 import { useMemo } from 'react'
 import {
@@ -16,16 +15,30 @@ import {
   TableHeader,
   TableRow,
 } from '@internal/design-system/components/ui/table'
+import type {
+  OrganizationMembershipResource,
+  RoleResource,
+  UserResource,
+} from '@clerk/types'
 
 interface Props {
-  members: User[]
+  currentUser: UserResource
+  memberships: OrganizationMembershipResource[]
+  roles: RoleResource[]
 }
 
 export const MembersTable = (props: Props) => {
-  const columns = useMemo(() => getColumns(), [])
+  const columns = useMemo(
+    () =>
+      getColumns({
+        roles: props.roles,
+        currentUser: props.currentUser,
+      }),
+    [props.currentUser, props.roles]
+  )
 
-  const table = useReactTable<User>({
-    data: props.members,
+  const table = useReactTable<OrganizationMembershipResource>({
+    data: props.memberships,
     columns,
     getCoreRowModel: getCoreRowModel(),
   })
