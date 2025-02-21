@@ -31,7 +31,7 @@ export const getColumns = (
 
       return (
         <div className="flex w-full items-center gap-4">
-          <Avatar className="rounded-full">
+          <Avatar className="size-8 rounded-full">
             {member.imageUrl ? (
               <AvatarImage src={member.imageUrl} alt={member.identifier} />
             ) : null}
@@ -75,7 +75,7 @@ export const getColumns = (
 
       return (
         <span>
-          {formatDistance(new Date(member.createdAt), new Date(), {
+          {formatDistance(member.createdAt, new Date(), {
             addSuffix: true,
           })}
         </span>

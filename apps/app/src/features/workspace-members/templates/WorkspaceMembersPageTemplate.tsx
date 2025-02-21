@@ -4,12 +4,16 @@ import { Suspense, useCallback, useEffect, useState } from 'react'
 import { InviteMemberDialog, MembersTable } from '../components'
 import { useOrganization, useUser } from '@clerk/nextjs'
 import type { RoleResource } from '@clerk/types'
+import { PendingInvitesTable } from '@/features/workspace-members/components/pending-invites-table'
 
 export const WorkspaceMembersPageTemplate = () => {
   const { user } = useUser()
 
-  const { isLoaded, memberships, organization } = useOrganization({
+  const { invitations, isLoaded, memberships, organization } = useOrganization({
     memberships: {
+      infinite: true,
+    },
+    invitations: {
       infinite: true,
     },
   })
@@ -53,13 +57,16 @@ export const WorkspaceMembersPageTemplate = () => {
           <InviteMemberDialog />
         </div>
       </div>
-      <Suspense>
+      <div className="space-y-4">
+        {invitations && invitations.data && invitations.data.length > 0 ? (
+          <PendingInvitesTable invitations={invitations.data} />
+        ) : null}
         <MembersTable
           currentUser={user}
           roles={roles}
           memberships={memberships?.data ?? []}
         />
-      </Suspense>
+      </div>
     </div>
   )
 }
