@@ -62,7 +62,7 @@ export const GeneralWorkspaceSettingsForm = (props: Props) => {
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSaveSettings)}>
         <Card>
-          <CardContent className="px-3 py-2">
+          <CardContent className="p-3">
             <FormField
               control={form.control}
               name="name"
@@ -77,7 +77,7 @@ export const GeneralWorkspaceSettingsForm = (props: Props) => {
               )}
             />
           </CardContent>
-          <CardFooter className="flex justify-end py-3 pt-2">
+          <CardFooter className="flex justify-end p-3 pt-0">
             <Button
               disabled={!form.formState.isValid}
               loading={isPending}
