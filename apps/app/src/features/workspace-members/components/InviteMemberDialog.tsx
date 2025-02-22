@@ -31,7 +31,11 @@ const FormSchema = z.object({
 
 type FormValues = z.infer<typeof FormSchema>
 
-export const InviteMemberDialog = () => {
+interface Props {
+  onInvitationSent?: () => Promise<void>
+}
+
+export const InviteMemberDialog = (props: Props) => {
   const [inviting, setInviting] = useState(false)
 
   const [isPending, startTransition] = useTransition()
@@ -60,6 +64,8 @@ export const InviteMemberDialog = () => {
           emailAddresses: [values.email],
           role: 'org:admin',
         })
+
+        await props.onInvitationSent?.()
       } catch (e) {
         const err = e as Error
         if ('errors' in err) {

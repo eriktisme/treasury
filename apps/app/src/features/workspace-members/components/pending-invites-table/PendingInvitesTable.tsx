@@ -19,10 +19,17 @@ import type { OrganizationInvitationResource } from '@clerk/types'
 
 interface Props {
   invitations: OrganizationInvitationResource[]
+  onInvitationRevoked: () => Promise<void>
 }
 
 export const PendingInvitesTable = (props: Props) => {
-  const columns = useMemo(() => getColumns(), [])
+  const columns = useMemo(
+    () =>
+      getColumns({
+        onInvitationRevoked: props.onInvitationRevoked,
+      }),
+    [props.onInvitationRevoked]
+  )
 
   const table = useReactTable<OrganizationInvitationResource>({
     data: props.invitations,

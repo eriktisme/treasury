@@ -1,10 +1,13 @@
 'use client'
 
-import { Suspense, useCallback, useEffect, useState } from 'react'
-import { InviteMemberDialog, MembersTable } from '../components'
+import { useCallback, useEffect, useState } from 'react'
+import {
+  InviteMemberDialog,
+  MembersTable,
+  PendingInvitesTable,
+} from '../components'
 import { useOrganization, useUser } from '@clerk/nextjs'
 import type { RoleResource } from '@clerk/types'
-import { PendingInvitesTable } from '@/features/workspace-members/components/pending-invites-table'
 
 export const WorkspaceMembersPageTemplate = () => {
   const { user } = useUser()
@@ -54,12 +57,15 @@ export const WorkspaceMembersPageTemplate = () => {
       <div className="mb-6 flex flex-wrap items-center justify-between gap-x-6 gap-y-3">
         <div className="w-full lg:max-w-80">{/* Search placeholder */}</div>
         <div>
-          <InviteMemberDialog />
+          <InviteMemberDialog onInvitationSent={invitations?.revalidate} />
         </div>
       </div>
       <div className="space-y-4">
         {invitations && invitations.data && invitations.data.length > 0 ? (
-          <PendingInvitesTable invitations={invitations.data} />
+          <PendingInvitesTable
+            invitations={invitations.data}
+            onInvitationRevoked={invitations.revalidate}
+          />
         ) : null}
         <MembersTable
           currentUser={user}
