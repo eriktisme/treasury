@@ -88,7 +88,7 @@ export const SettingsSidebar = (props: Props) => {
           <SidebarGroupContent>
             <SidebarMenu>
               {accountRoutes.map((route) => {
-                const currentPath = `/${organization?.slug}/settings/${route.key}`
+                const currentPath = `/${organization?.slug}/settings/account/${route.key}`
                 return (
                   <SidebarMenuItem key={`route-${route.key}`}>
                     <Link href={currentPath}>
