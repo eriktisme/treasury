@@ -17,6 +17,7 @@ import type {
 
 interface GetColumnsParams {
   currentUser: UserResource
+  hasMoreThanOneAdmin: boolean
   roles: RoleResource[]
 }
 
@@ -52,12 +53,11 @@ export const getColumns = (
 
       return (
         <SelectRole
-          disabled={member.publicUserData.userId === params.currentUser.id}
+          disabled={!params.hasMoreThanOneAdmin}
           onChange={async (role) => {
             await member.update({
               role: role as OrganizationCustomRoleKey,
             })
-            await member?.reload()
           }}
           value={member.role as OrganizationCustomRoleKey}
           options={params.roles.map(

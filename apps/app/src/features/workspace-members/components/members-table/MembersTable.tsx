@@ -33,8 +33,11 @@ export const MembersTable = (props: Props) => {
       getColumns({
         roles: props.roles,
         currentUser: props.currentUser,
+        hasMoreThanOneAdmin:
+          props.memberships.filter((member) => member.role === 'org:admin')
+            .length > 1,
       }),
-    [props.currentUser, props.roles]
+    [props.currentUser, props.memberships, props.roles]
   )
 
   const table = useReactTable<OrganizationMembershipResource>({
