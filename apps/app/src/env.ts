@@ -18,6 +18,10 @@ export const env = createEnv({
     NEXT_PUBLIC_VERCEL_URL: z.string(),
     NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL: z.string(),
 
+    // Added by PostHog
+    NEXT_PUBLIC_POSTHOG_KEY: z.string().min(1),
+    NEXT_PUBLIC_POSTHOG_HOST: z.string().min(1).startsWith('https://'),
+
     // Added by Sentry
     NEXT_PUBLIC_SENTRY_DSN: z.string().min(1).startsWith('https://'),
   },
@@ -28,7 +32,6 @@ export const env = createEnv({
    */
   runtimeEnv: {
     CLERK_SECRET_KEY: process.env.CLERK_SECRET_KEY,
-    CLERK_WEBHOOK_SECRET: process.env.CLERK_WEBHOOK_SECRET,
     DATABASE_URL: process.env.DATABASE_URL,
     DATABASE_URL_UNPOOLED: process.env.DATABASE_URL_UNPOOLED,
     NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL:
@@ -39,12 +42,16 @@ export const env = createEnv({
       process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY,
     NEXT_PUBLIC_CLERK_SIGN_IN_URL: process.env.NEXT_PUBLIC_CLERK_SIGN_IN_URL,
     NEXT_PUBLIC_CLERK_SIGN_UP_URL: process.env.NEXT_PUBLIC_CLERK_SIGN_UP_URL,
+    NEXT_PUBLIC_POSTHOG_HOST: process.env.NEXT_PUBLIC_POSTHOG_HOST,
+    NEXT_PUBLIC_POSTHOG_KEY: process.env.NEXT_PUBLIC_POSTHOG_KEY,
     NEXT_PUBLIC_SENTRY_DSN: process.env.NEXT_PUBLIC_SENTRY_DSN,
     NEXT_PUBLIC_VERCEL_ENV: process.env.NEXT_PUBLIC_VERCEL_ENV,
     NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL:
       process.env.NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL,
     NEXT_PUBLIC_VERCEL_URL: process.env.NEXT_PUBLIC_VERCEL_URL,
     NEXT_RUNTIME: process.env.NEXT_RUNTIME,
+    POSTHOG_HOST: process.env.POSTHOG_HOST,
+    POSTHOG_KEY: process.env.POSTHOG_KEY,
     SENTRY_AUTH_TOKEN: process.env.SENTRY_AUTH_TOKEN,
     SENTRY_ORG: process.env.SENTRY_ORG,
     SENTRY_PROJECT: process.env.SENTRY_PROJECT,
@@ -62,7 +69,10 @@ export const env = createEnv({
 
     // Added by Clerk
     CLERK_SECRET_KEY: z.string().min(1),
-    CLERK_WEBHOOK_SECRET: z.string().min(1),
+
+    // Added by PostHog
+    POSTHOG_KEY: z.string().min(1),
+    POSTHOG_HOST: z.string().min(1).startsWith('https://'),
 
     // Added by Vercel
     NEXT_RUNTIME: z.enum(['nodejs', 'edge']).optional(),

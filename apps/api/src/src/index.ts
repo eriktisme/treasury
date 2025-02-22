@@ -3,6 +3,7 @@ import { handle } from 'hono/aws-lambda'
 import { secureHeaders } from 'hono/secure-headers'
 import type { Bindings } from './bindings'
 import { app as v1Routes } from './routes/v1'
+import { app as webhooksRoutes } from './routes/webhooks'
 import { app as healthRoutes } from './routes/health'
 import { swaggerUI } from '@hono/swagger-ui'
 
@@ -19,6 +20,7 @@ const app = new OpenAPIHono<{ Bindings: Bindings }>({
 app.use(secureHeaders())
 
 app.route('v1', v1Routes)
+app.route('/webhooks', webhooksRoutes)
 
 app.openAPIRegistry.registerComponent('securitySchemes', 'Bearer', {
   type: 'http',

@@ -115,13 +115,15 @@ jobs:
       - run: pnpm cdk:migrations -- deploy --all --require-approval never
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
-          CLERK_SECRET_KEY: ${{ secrets.CLERK_SECRET_KEY }}
-          CLERK_PUBLISHABLE_KEY: ${{ secrets.CLERK_PUBLISHABLE_KEY }}
 
       - run: pnpm cdk:api -- deploy --all --require-approval never
         env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
           CLERK_SECRET_KEY: ${{ secrets.CLERK_SECRET_KEY }}
           CLERK_PUBLISHABLE_KEY: ${{ secrets.CLERK_PUBLISHABLE_KEY }}
+          CLERK_WEBHOOK_SECRET: ${{ secrets.CLERK_WEBHOOK_SECRET }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DOMAIN_NAME: ${{ secrets.DOMAIN_NAME }}
+          POSTHOG_KEY: ${{ secrets.POSTHOG_KEY }}
+          POSTHOG_HOST: ${{ secrets.POSTHOG_HOST }}
 
       - run: pnpm vercel deploy --prod --token=${{ secrets.VERCEL_TOKEN }}

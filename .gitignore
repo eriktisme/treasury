@@ -2,3 +2,4 @@
 .next
 cdk.out
 node_modules
+.vercel
