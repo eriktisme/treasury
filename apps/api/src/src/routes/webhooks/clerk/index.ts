@@ -186,8 +186,8 @@ const post = createRoute({
     body: {
       content: {
         'application/json': { schema: WebhookRequestSchema },
-      }
-    }
+      },
+    },
   },
   responses: {
     201: {
@@ -228,7 +228,6 @@ app.openapi(post, async (c) => {
     return c.text('Error occurred', 400)
   }
 
-  const { id } = event.data
   const eventType = event.type
 
   let response: string = ''

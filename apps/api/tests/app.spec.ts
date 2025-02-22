@@ -6,15 +6,31 @@ const app = new App()
 
 const mockProps = {
   stage: 'test',
-  clerkPublishableKey: 'test-publishable-key',
-  clerkSecretKey: 'test-secret-key',
+  clerk: {
+    publishableKey: 'test-publishable-key',
+    secretKey: 'test-secret-key',
+    webhookSecret: 'test-webhook-secret',
+  },
+  postHog: {
+    key: '',
+    host: '',
+  },
   databaseUrl: 'test-database-url',
+  domainName: 'test-domain-name',
 }
 
 const stack = new ApiService(app, 'api-stack', mockProps)
 
 describe('ApiService', () => {
-  it('should have an API Gateway', () => {
+  it('should create a Certificate', () => {
+    const template = Template.fromStack(stack)
+
+    template.hasResource('AWS::CertificateManager::Certificate', {
+      //
+    })
+  })
+
+  it('should create an API Gateway', () => {
     const template = Template.fromStack(stack)
 
     template.hasResourceProperties('AWS::ApiGateway::RestApi', {
@@ -26,15 +42,18 @@ describe('ApiService', () => {
     })
   })
 
-  it('should have a Lambda function', () => {
+  it('should create a Lambda function', () => {
     const template = Template.fromStack(stack)
 
     template.hasResourceProperties('AWS::Lambda::Function', {
       Environment: {
         Variables: {
-          CLERK_PUBLISHABLE_KEY: mockProps.clerkPublishableKey,
-          CLERK_SECRET_KEY: mockProps.clerkSecretKey,
+          CLERK_PUBLISHABLE_KEY: mockProps.clerk.publishableKey,
+          CLERK_SECRET_KEY: mockProps.clerk.secretKey,
+          CLERK_WEBHOOK_SECRET: mockProps.clerk.webhookSecret,
           DATABASE_URL: mockProps.databaseUrl,
+          POSTHOG_HOST: mockProps.postHog.host,
+          POSTHOG_KEY: mockProps.postHog.key,
         },
       },
     })

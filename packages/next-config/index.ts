@@ -60,7 +60,10 @@ export const config: NextConfig = {
 export const withAnalyzer = (sourceConfig: NextConfig): NextConfig =>
   withBundleAnalyzer()(sourceConfig)
 
-export const withSentry = (sourceConfig: NextConfig, sentryConfig: Parameters<typeof withSentryConfig>[1]): NextConfig => {
+export const withSentry = (
+  sourceConfig: NextConfig,
+  sentryConfig: Parameters<typeof withSentryConfig>[1]
+): NextConfig => {
   return withSentryConfig(
     { ...sourceConfig, transpilePackages: ['@sentry/nextjs'] },
     {

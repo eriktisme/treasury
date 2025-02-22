@@ -1,5 +1,5 @@
 import { init } from '@sentry/nextjs'
-import { BrowserOptions } from '@sentry/react'
+import type { BrowserOptions } from '@sentry/react'
 
 export const initializeSentry = (opts: BrowserOptions) => {
   if (process.env.TURBOPACK) {

@@ -9,6 +9,13 @@ import {
   Certificate,
   CertificateValidation,
 } from 'aws-cdk-lib/aws-certificatemanager'
+import { StringParameter } from 'aws-cdk-lib/aws-ssm'
+import {
+  ARecord,
+  PublicHostedZone,
+  RecordTarget,
+} from 'aws-cdk-lib/aws-route53'
+import { ApiGateway } from 'aws-cdk-lib/aws-route53-targets'
 
 interface Props extends StackProps {
   clerk: {
@@ -16,17 +23,32 @@ interface Props extends StackProps {
     secretKey: string
     webhookSecret: string
   }
-  postHog: {
-    key: string
-    host: string
-  }
   databaseUrl: string
   domainName: string
+  postHog: {
+    host: string
+    key: string
+  }
 }
 
 export class ApiService extends Stack {
   constructor(scope: Construct, id: string, props: Props) {
     super(scope, id, props)
+
+    const hostedZoneId = StringParameter.fromStringParameterName(
+      this,
+      'hosted-zone-id',
+      `/${props.stage}/hosted-zone-id`
+    ).stringValue
+
+    const zone = PublicHostedZone.fromPublicHostedZoneAttributes(
+      this,
+      'hosted-zone',
+      {
+        zoneName: props.domainName,
+        hostedZoneId,
+      }
+    )
 
     const handler = new NodeJSLambda(this, 'handler', {
       entry: join(__dirname, './src/index.ts'),
@@ -48,10 +70,10 @@ export class ApiService extends Stack {
 
     const certificate = new Certificate(this, 'certificate', {
       domainName,
-      validation: CertificateValidation.fromDns(),
+      validation: CertificateValidation.fromDns(zone),
     })
 
-    new LambdaRestApi(this, 'api', {
+    const restApi = new LambdaRestApi(this, 'api', {
       deployOptions: {
         tracingEnabled: true,
       },
@@ -62,6 +84,12 @@ export class ApiService extends Stack {
       endpointTypes: [EndpointType.REGIONAL],
       handler,
       restApiName: `${props.stage}-api`,
+    })
+
+    new ARecord(this, 'api-a', {
+      recordName: domainName,
+      zone,
+      target: RecordTarget.fromAlias(new ApiGateway(restApi)),
     })
   }
 }
