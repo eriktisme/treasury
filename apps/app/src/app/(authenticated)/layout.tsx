@@ -13,6 +13,8 @@ export default async function Layout({
 
   if (!user) {
     redirectToSignIn()
+
+    return
   }
 
   return <>{children}</>

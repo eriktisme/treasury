@@ -7,6 +7,7 @@ import { AppSidebar } from '@/features/app-sidebar'
 import { clerkClient, currentUser } from '@clerk/nextjs/server'
 import type { Organization } from '@clerk/backend'
 import { HotKeys } from '@/features/hot-keys'
+import { SyncActiveOrganizationFromURLToSession } from '@/lib/sync-active-workspace-from-url-to-session'
 
 const client = await clerkClient()
 
@@ -41,6 +42,7 @@ export default async function Layout({
         </SidebarInset>
       </SidebarProvider>
       <HotKeys />
+      <SyncActiveOrganizationFromURLToSession />
     </>
   )
 }

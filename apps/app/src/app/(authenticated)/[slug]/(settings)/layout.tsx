@@ -5,6 +5,7 @@ import {
 } from '@internal/design-system/components/ui/sidebar'
 import { HotKeys, WorkspaceSettingsHotKeys } from '@/features/hot-keys'
 import { SettingsSidebar } from '@/features/settings-sidebar'
+import { SyncActiveOrganizationFromURLToSession } from '@/lib/sync-active-workspace-from-url-to-session'
 
 export default function Layout({ children }: Readonly<PropsWithChildren>) {
   return (
@@ -17,6 +18,7 @@ export default function Layout({ children }: Readonly<PropsWithChildren>) {
       </SidebarProvider>
       <HotKeys />
       <WorkspaceSettingsHotKeys />
+      <SyncActiveOrganizationFromURLToSession />
     </>
   )
 }
