@@ -12,6 +12,6 @@
   },
   "devDependencies": {
     "@internal/tsconfig": "workspace:*",
-    "next": "^15.1.4"
+    "next": "^15.1.7"
   }
 }
