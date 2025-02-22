@@ -1,0 +1,9 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "compilerOptions": {
+    "typeRoots": ["./node_modules/@types"]
+  },
+  "exclude": ["cdk.out", "node_modules"],
+  "extends": "@internal/tsconfig/node.json",
+  "include": ["bin", "src"]
+}
