@@ -7,6 +7,7 @@ import type {
   OrganizationMembershipJSON,
   UserJSON,
   WebhookEvent,
+  SessionJSON,
 } from '@clerk/backend'
 import { analytics } from '@internal/analytics/posthog/server'
 import { z } from 'zod'
@@ -166,6 +167,15 @@ const handleOrganizationMembershipDeleted = (
   return 'Organization membership deleted'
 }
 
+const handleSessionCreated = (data: SessionJSON) => {
+  analytics.capture({
+    event: 'User Logged In',
+    distinctId: data.user_id,
+  })
+
+  return 'User session created'
+}
+
 export const app = new OpenAPIHono<{ Bindings: Bindings }>()
 
 const post = createRoute({
@@ -254,6 +264,10 @@ app.openapi(post, async (c) => {
     }
     case 'organizationMembership.deleted': {
       response = handleOrganizationMembershipDeleted(event.data)
+      break
+    }
+    case 'session.created': {
+      response = handleSessionCreated(event.data)
       break
     }
     default: {
