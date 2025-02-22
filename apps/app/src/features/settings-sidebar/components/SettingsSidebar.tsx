@@ -64,10 +64,12 @@ export const SettingsSidebar = (props: Props) => {
           <SidebarMenuItem>
             <Tooltip>
               <TooltipTrigger asChild>
-                <SidebarMenuButton>
-                  <ChevronLeftIcon />
-                  <span>Back to app</span>
-                </SidebarMenuButton>
+                <Link href={`/${organization?.slug}`}>
+                  <SidebarMenuButton>
+                    <ChevronLeftIcon />
+                    <span>Back to app</span>
+                  </SidebarMenuButton>
+                </Link>
               </TooltipTrigger>
               <TooltipContent align="start">
                 <div className="space-x-3">
