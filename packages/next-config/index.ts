@@ -1,6 +1,7 @@
 import withBundleAnalyzer from '@next/bundle-analyzer'
 import type { NextConfig } from 'next'
 import { createSecureHeaders } from 'next-secure-headers'
+import { withSentryConfig } from '@sentry/nextjs'
 
 export const config: NextConfig = {
   images: {
@@ -58,3 +59,16 @@ export const config: NextConfig = {
 
 export const withAnalyzer = (sourceConfig: NextConfig): NextConfig =>
   withBundleAnalyzer()(sourceConfig)
+
+export const withSentry = (sourceConfig: NextConfig, sentryConfig: Parameters<typeof withSentryConfig>[1]): NextConfig => {
+  return withSentryConfig(
+    { ...sourceConfig, transpilePackages: ['@sentry/nextjs'] },
+    {
+      ...sentryConfig,
+      debug: false,
+      silent: !process.env.CI,
+      widenClientFileUpload: true,
+      disableLogger: true,
+    }
+  )
+}

@@ -14,8 +14,12 @@ export const env = createEnv({
     NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL: z.string().min(1).startsWith('/'),
 
     // Added by Vercel
+    NEXT_PUBLIC_VERCEL_ENV: z.string(),
     NEXT_PUBLIC_VERCEL_URL: z.string(),
     NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL: z.string(),
+
+    // Added by Sentry
+    NEXT_PUBLIC_SENTRY_DSN: z.string().min(1).startsWith('https://'),
   },
   /*
    * Environment variables available on the client (and server).
@@ -35,9 +39,15 @@ export const env = createEnv({
       process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY,
     NEXT_PUBLIC_CLERK_SIGN_IN_URL: process.env.NEXT_PUBLIC_CLERK_SIGN_IN_URL,
     NEXT_PUBLIC_CLERK_SIGN_UP_URL: process.env.NEXT_PUBLIC_CLERK_SIGN_UP_URL,
+    NEXT_PUBLIC_SENTRY_DSN: process.env.NEXT_PUBLIC_SENTRY_DSN,
+    NEXT_PUBLIC_VERCEL_ENV: process.env.NEXT_PUBLIC_VERCEL_ENV,
     NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL:
       process.env.NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL,
     NEXT_PUBLIC_VERCEL_URL: process.env.NEXT_PUBLIC_VERCEL_URL,
+    NEXT_RUNTIME: process.env.NEXT_RUNTIME,
+    SENTRY_AUTH_TOKEN: process.env.SENTRY_AUTH_TOKEN,
+    SENTRY_ORG: process.env.SENTRY_ORG,
+    SENTRY_PROJECT: process.env.SENTRY_PROJECT,
   },
   /*
    * Due to how Next.js bundles environment variables on Edge and Client,
@@ -50,8 +60,17 @@ export const env = createEnv({
     DATABASE_URL: z.string().min(1).startsWith('postgresql://'),
     DATABASE_URL_UNPOOLED: z.string().min(1).startsWith('postgresql://'),
 
+    // Added by Clerk
     CLERK_SECRET_KEY: z.string().min(1),
     CLERK_WEBHOOK_SECRET: z.string().min(1),
+
+    // Added by Vercel
+    NEXT_RUNTIME: z.enum(['nodejs', 'edge']).optional(),
+
+    // Added by Sentry
+    SENTRY_AUTH_TOKEN: z.string().min(1),
+    SENTRY_ORG: z.string().min(1),
+    SENTRY_PROJECT: z.string().min(1),
   },
   skipValidation: !!process.env.CI || !!process.env.SKIP_ENV_VALIDATION,
 })
