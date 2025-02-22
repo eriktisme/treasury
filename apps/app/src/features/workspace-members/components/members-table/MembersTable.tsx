@@ -24,6 +24,7 @@ import type {
 interface Props {
   currentUser: UserResource
   memberships: OrganizationMembershipResource[]
+  onWorkspaceMemberRemoved?: () => Promise<void>
   roles: RoleResource[]
 }
 
@@ -36,8 +37,14 @@ export const MembersTable = (props: Props) => {
         hasMoreThanOneAdmin:
           props.memberships.filter((member) => member.role === 'org:admin')
             .length > 1,
+        onWorkspaceMemberRemoved: props.onWorkspaceMemberRemoved,
       }),
-    [props.currentUser, props.memberships, props.roles]
+    [
+      props.currentUser,
+      props.memberships,
+      props.onWorkspaceMemberRemoved,
+      props.roles,
+    ]
   )
 
   const table = useReactTable<OrganizationMembershipResource>({

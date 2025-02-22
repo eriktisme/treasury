@@ -71,6 +71,7 @@ export const WorkspaceMembersPageTemplate = () => {
           currentUser={user}
           roles={roles}
           memberships={memberships?.data ?? []}
+          onWorkspaceMemberRemoved={memberships?.revalidate}
         />
       </div>
     </div>

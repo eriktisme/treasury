@@ -14,10 +14,21 @@ import type {
   RoleResource,
   UserResource,
 } from '@clerk/types'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
+} from '@internal/design-system/components/ui/dropdown-menu'
+import { Button } from '@internal/design-system/components/ui/button'
+import { MoreHorizontalIcon } from 'lucide-react'
+import { RemoveMemberFromWorkspace } from './RemoveMemberFromWorkspaceDialog'
 
 interface GetColumnsParams {
   currentUser: UserResource
   hasMoreThanOneAdmin: boolean
+  onWorkspaceMemberRemoved?: () => Promise<void>
   roles: RoleResource[]
 }
 
@@ -79,6 +90,41 @@ export const getColumns = (
             addSuffix: true,
           })}
         </span>
+      )
+    },
+  },
+  {
+    id: 'actions',
+    cell: ({ row }) => {
+      const member = row.original
+
+      return (
+        <div className="flex justify-end">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="h-8 w-8 p-0">
+                <span className="sr-only">Open menu</span>
+                <MoreHorizontalIcon className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>Actions</DropdownMenuLabel>
+              <DropdownMenuItem
+                onClick={() =>
+                  navigator.clipboard.writeText(
+                    String(member.publicUserData.userId)
+                  )
+                }
+              >
+                Copy ID
+              </DropdownMenuItem>
+              <RemoveMemberFromWorkspace
+                onWorkspaceMemberRemoved={params.onWorkspaceMemberRemoved}
+                member={member}
+              />
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       )
     },
   },
