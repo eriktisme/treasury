@@ -1,10 +1,10 @@
 import { Template } from 'aws-cdk-lib/assertions'
 import { App } from 'aws-cdk-lib'
-import { ApiService } from '../src'
+import { ApiService, ApiServiceProps } from '../src'
 
 const app = new App()
 
-const mockProps = {
+const mockProps: ApiServiceProps = {
   stage: 'test',
   clerk: {
     publishableKey: 'test-publishable-key',
@@ -14,6 +14,10 @@ const mockProps = {
   postHog: {
     key: '',
     host: '',
+  },
+  stripe: {
+    secretKey: 'test-secret-key',
+    webhookSecret: 'test-webhook-secret',
   },
   databaseUrl: 'test-database-url',
   domainName: 'test-domain-name',

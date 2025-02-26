@@ -17,7 +17,7 @@ import {
 } from 'aws-cdk-lib/aws-route53'
 import { ApiGateway } from 'aws-cdk-lib/aws-route53-targets'
 
-interface Props extends StackProps {
+export interface ApiServiceProps extends StackProps {
   clerk: {
     publishableKey: string
     secretKey: string
@@ -29,10 +29,14 @@ interface Props extends StackProps {
     host: string
     key: string
   }
+  stripe: {
+    secretKey: string
+    webhookSecret: string
+  }
 }
 
 export class ApiService extends Stack {
-  constructor(scope: Construct, id: string, props: Props) {
+  constructor(scope: Construct, id: string, props: ApiServiceProps) {
     super(scope, id, props)
 
     const hostedZoneId = StringParameter.fromStringParameterName(
@@ -59,6 +63,8 @@ export class ApiService extends Stack {
         DATABASE_URL: props.databaseUrl,
         POSTHOG_HOST: props.postHog.host,
         POSTHOG_KEY: props.postHog.key,
+        STRIPE_SECRET_KEY: props.stripe.secretKey,
+        STRIPE_WEBHOOK_SECRET: props.stripe.webhookSecret,
       },
     })
 
