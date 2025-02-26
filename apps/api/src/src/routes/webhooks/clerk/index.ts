@@ -25,12 +25,7 @@ const handleUserCreated = (data: UserJSON) => {
   analytics.identify({
     distinctId: data.id,
     properties: {
-      email: data.email_addresses.at(0)?.email_address,
-      firstName: data.first_name,
-      lastName: data.last_name,
       createdAt: new Date(data.created_at),
-      avatar: data.image_url,
-      phoneNumber: data.phone_numbers.at(0)?.phone_number,
     },
   })
 
@@ -43,17 +38,6 @@ const handleUserCreated = (data: UserJSON) => {
 }
 
 const handleUserUpdated = (data: UserJSON) => {
-  analytics.identify({
-    distinctId: data.id,
-    properties: {
-      email: data.email_addresses.at(0)?.email_address,
-      firstName: data.first_name,
-      lastName: data.last_name,
-      createdAt: new Date(data.created_at),
-      phoneNumber: data.phone_numbers.at(0)?.phone_number,
-    },
-  })
-
   analytics.capture({
     event: 'User Updated',
     distinctId: data.id,
@@ -159,6 +143,8 @@ const handleOrganizationMembershipCreated = (
 const handleOrganizationMembershipDeleted = (
   data: OrganizationMembershipJSON
 ) => {
+  // Remove organization membership association
+
   analytics.capture({
     event: 'Organization Member Deleted',
     distinctId: data.public_user_data.user_id,
