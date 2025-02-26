@@ -8,6 +8,6 @@ export const config: Config = {
     './node_modules/@internal/design-system/index.tsx',
     './src/**/*.{ts,tsx}',
   ],
-  darkMode: ['class'],
+  darkMode: [],
   plugins: [animate],
 }
