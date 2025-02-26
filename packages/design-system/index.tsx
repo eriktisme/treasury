@@ -6,7 +6,10 @@ interface Props extends ThemeProviderProps {
   //
 }
 
-export const DesignSystemProvider = ({ children, ...props }: Readonly<Props>) => (
+export const DesignSystemProvider = ({
+  children,
+  ...props
+}: Readonly<Props>) => (
   <ThemeProvider {...props}>
     <TooltipProvider>{children}</TooltipProvider>
     <Toaster />
