@@ -10,5 +10,5 @@ coverage
 .cdk.staging
 cdk.out
 
-# Generating Types
+# Generated types
 pgtyped.json

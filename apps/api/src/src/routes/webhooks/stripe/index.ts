@@ -4,16 +4,21 @@ import type { Bindings } from '../../../bindings'
 import { analytics } from '@internal/analytics/posthog/server'
 import { z } from 'zod'
 import { Stripe } from 'stripe'
+import { EventBridgeClient, PutEventsCommand } from '@aws-sdk/client-eventbridge'
 
 const ConfigSchema = z.object({
+  eventBusName: z.string(),
   stripeWebhookSecret: z.string(),
   stripeSecretKey: z.string(),
 })
 
 const config = ConfigSchema.parse({
+  eventBusName: process.env.EVENT_BUS_NAME,
   stripeWebhookSecret: process.env.STRIPE_WEBHOOK_SECRET,
   stripeSecretKey: process.env.STRIPE_SECRET_KEY,
 })
+
+const eventBridgeClient = new EventBridgeClient()
 
 const stripe = new Stripe(config.stripeSecretKey, {
   apiVersion: '2025-02-24.acacia',
@@ -86,6 +91,21 @@ app.openapi(post, async (c) => {
   }
 
   await analytics.shutdown()
+
+  await eventBridgeClient.send(
+    new PutEventsCommand({
+      Entries: [
+        {
+          Detail: JSON.stringify(stripeEvent.data.object),
+          DetailType: stripeEvent.type,
+          EventBusName: config.eventBusName,
+          Source: 'stripe',
+          Time: new Date(),
+        },
+      ],
+    })
+  )
+
 
   return c.json(
     {

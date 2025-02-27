@@ -16,6 +16,7 @@ import {
   RecordTarget,
 } from 'aws-cdk-lib/aws-route53'
 import { ApiGateway } from 'aws-cdk-lib/aws-route53-targets'
+import { EventBus } from 'aws-cdk-lib/aws-events'
 
 export interface ApiServiceProps extends StackProps {
   clerk: {
@@ -54,6 +55,14 @@ export class ApiService extends Stack {
       }
     )
 
+    const eventBusArn = StringParameter.fromStringParameterName(
+      this,
+      'event-bus-arn',
+      `/engine/${props.stage}/event-bus-arn`,
+    ).stringValue
+
+    const eventBus = EventBus.fromEventBusArn(this, 'event-bus', eventBusArn)
+
     const handler = new NodeJSLambda(this, 'handler', {
       entry: join(__dirname, './src/index.ts'),
       environment: {
@@ -61,12 +70,15 @@ export class ApiService extends Stack {
         CLERK_SECRET_KEY: props.clerk.secretKey,
         CLERK_WEBHOOK_SECRET: props.clerk.webhookSecret,
         DATABASE_URL: props.databaseUrl,
+        EVENT_BUS_NAME: eventBus.eventBusName,
         POSTHOG_HOST: props.postHog.host,
         POSTHOG_KEY: props.postHog.key,
         STRIPE_SECRET_KEY: props.stripe.secretKey,
         STRIPE_WEBHOOK_SECRET: props.stripe.webhookSecret,
       },
     })
+
+    eventBus.grantPutEventsTo(handler)
 
     handler.addFunctionUrl({
       authType: FunctionUrlAuthType.NONE,
