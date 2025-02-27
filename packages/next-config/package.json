@@ -7,13 +7,13 @@
     "typeCheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@next/bundle-analyzer": "^15.0.3",
-    "@sentry/react": "^9.1.0",
-    "@sentry/nextjs": "^9.1.0",
+    "@next/bundle-analyzer": "^15.2.0",
+    "@sentry/react": "^9.2.0",
+    "@sentry/nextjs": "^9.2.0",
     "next-secure-headers": "^2.2.0"
   },
   "devDependencies": {
     "@internal/tsconfig": "workspace:*",
-    "next": "^15.1.7"
+    "next": "^15.2.0"
   }
 }

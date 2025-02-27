@@ -22,7 +22,7 @@
     "@internal/tailwind-config": "workspace:*",
     "@sentry/nextjs": "^9.2.0",
     "@t3-oss/env-nextjs": "^0.11.1",
-    "next": "^15.1.7",
+    "next": "^15.2.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.54.2",
