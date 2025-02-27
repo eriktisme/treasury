@@ -1,6 +1,7 @@
 import { Template } from 'aws-cdk-lib/assertions'
 import { App } from 'aws-cdk-lib'
-import { ApiService, ApiServiceProps } from '../src'
+import type { ApiServiceProps } from '../src'
+import { ApiService } from '../src'
 
 const app = new App()
 
