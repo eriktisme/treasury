@@ -9,3 +9,6 @@ coverage
 # CDK asset staging directory
 .cdk.staging
 cdk.out
+
+# Generated types
+pgtyped.json

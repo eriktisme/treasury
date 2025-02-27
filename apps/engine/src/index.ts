@@ -3,6 +3,7 @@ import type { StackProps } from '@internal/cdk-utils/stack'
 import { Stack } from '@internal/cdk-utils/stack'
 import { EventBus } from 'aws-cdk-lib/aws-events'
 import { StringParameter } from 'aws-cdk-lib/aws-ssm'
+import { OnOrganizationCreatedConstruct } from './constructs/on-organization-created'
 
 export interface EngineProps extends StackProps {
   clerk: {
@@ -23,13 +24,18 @@ export class Engine extends Stack {
     super(scope, id, props)
 
     // TODO: Look into archives
-    const sourceEventBus = new EventBus(this, 'event-bus', {
+    const eventBus = new EventBus(this, 'event-bus', {
       eventBusName: `${props.stage}-event-bus`,
     })
 
     new StringParameter(this, 'event-bus-arn', {
       parameterName: `/engine/${props.stage}/event-bus-arn`,
-      stringValue: sourceEventBus.eventBusArn,
+      stringValue: eventBus.eventBusArn,
+    })
+
+    new OnOrganizationCreatedConstruct(this, 'on-organization-created', {
+      ...props,
+      eventBus,
     })
   }
 }
