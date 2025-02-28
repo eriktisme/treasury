@@ -88,9 +88,9 @@ app.openapi(post, async (c) => {
   const body = request.valid('json')
 
   /*
-    * Verify the event by fetching it from Stripe
-    *
-    * This is a workaround for the Hono API not supporting the raw body
+   * Verify the event by fetching it from Stripe
+   *
+   * This is a workaround for the Hono API not supporting the raw body
    */
   try {
     stripeEvent = await stripe.events.retrieve(body.id)

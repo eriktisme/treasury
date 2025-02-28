@@ -58,7 +58,7 @@ export class ApiService extends Stack {
     const eventBusArn = StringParameter.fromStringParameterName(
       this,
       'event-bus-arn',
-      `/engine/${props.stage}/event-bus-arn`,
+      `/engine/${props.stage}/event-bus-arn`
     ).stringValue
 
     const eventBus = EventBus.fromEventBusArn(this, 'event-bus', eventBusArn)
