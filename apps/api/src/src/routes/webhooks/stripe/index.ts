@@ -85,15 +85,18 @@ app.openapi(post, async (c) => {
 
   let stripeEvent: Stripe.Event | null = null
 
+  const body = request.valid('json')
+
+  /*
+    * Verify the event by fetching it from Stripe
+    *
+    * This is a workaround for the Hono API not supporting the raw body
+   */
   try {
-    stripeEvent = stripe.webhooks.constructEvent(
-      await request.text(),
-      request.header('Stripe-Signature') as string,
-      config.stripeWebhookSecret
-    )
-  } catch (err) {
-    console.error('Failed to construct stripe event', {
-      err,
+    stripeEvent = await stripe.events.retrieve(body.id)
+  } catch (e) {
+    console.error('Failed to retrieve stripe event', {
+      e,
     })
 
     return c.json({ ok: false }, 500)

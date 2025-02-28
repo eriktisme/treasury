@@ -37,10 +37,6 @@ export const WebhookRequestSchema = z
       example: 'event',
       description: 'Always set to event.',
     }),
-    account: z.string().openapi({
-      example: 'ins_123',
-      description: 'The identifier of your Stripe instance',
-    }),
   })
   .catchall(z.unknown())
   .openapi('WebhookRequestSchema', {
