@@ -91,6 +91,17 @@ export class ApiService extends Stack {
     })
 
     const restApi = new LambdaRestApi(this, 'api', {
+      defaultCorsPreflightOptions: {
+        allowCredentials: true,
+        allowHeaders: [
+          'Authorization',
+          'Origin',
+          'X-Requested-With',
+          'Content-Type',
+          'Accept',
+        ],
+        allowOrigins: [`https://app.${props.domainName}`],
+      },
       deployOptions: {
         tracingEnabled: true,
       },

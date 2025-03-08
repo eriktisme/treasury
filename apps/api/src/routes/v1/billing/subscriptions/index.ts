@@ -1,5 +1,5 @@
 import { createRoute, OpenAPIHono } from '@hono/zod-openapi'
-import type { Bindings } from '../../../../bindings'
+import type { Bindings } from '@/bindings'
 import { SubscriptionSchema } from './schema'
 
 export const app = new OpenAPIHono<{ Bindings: Bindings }>()

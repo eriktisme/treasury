@@ -126,3 +126,51 @@ export const deleteStripePrice = new PreparedQuery<
   IDeleteStripePriceParams,
   IDeleteStripePriceResult
 >(deleteStripePriceIR)
+
+/** 'GetStripePriceById' parameters type */
+export interface IGetStripePriceByIdParams {
+  id: string
+}
+
+/** 'GetStripePriceById' return type */
+export interface IGetStripePriceByIdResult {
+  active: boolean
+  createdAt: Date
+  currency: string | null
+  id: string
+  metadata: Json | null
+  productId: string
+  recurringCount: number | null
+  recurringInterval: string | null
+  unitAmount: number | null
+}
+
+/** 'GetStripePriceById' query type */
+export interface IGetStripePriceByIdQuery {
+  params: IGetStripePriceByIdParams
+  result: IGetStripePriceByIdResult
+}
+
+const getStripePriceByIdIR: any = {
+  usedParamSet: { id: true },
+  params: [
+    {
+      name: 'id',
+      required: true,
+      transform: { type: 'scalar' },
+      locs: [{ a: 39, b: 42 }],
+    },
+  ],
+  statement: 'SELECT * FROM stripe_prices WHERE id = :id!',
+}
+
+/**
+ * Query generated from SQL:
+ * ```
+ * SELECT * FROM stripe_prices WHERE id = :id!
+ * ```
+ */
+export const getStripePriceById = new PreparedQuery<
+  IGetStripePriceByIdParams,
+  IGetStripePriceByIdResult
+>(getStripePriceByIdIR)
