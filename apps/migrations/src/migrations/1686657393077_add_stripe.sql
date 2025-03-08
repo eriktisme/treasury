@@ -20,25 +20,13 @@ CREATE TABLE stripe_prices (
     created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now()
 );
 
-CREATE TABLE stripe_addresses (
-    id VARCHAR(255) PRIMARY KEY,
-    line1 VARCHAR(255),
-    line2 VARCHAR(255),
-    city VARCHAR(255),
-    state VARCHAR(50),
-    zip VARCHAR(20),
-    country VARCHAR(50),
-    created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now()
-);
-
 CREATE TABLE stripe_customers (
-    workspace_id VARCHAR,
+    workspace_id VARCHAR NOT NULL UNIQUE,
     id VARCHAR(255) PRIMARY KEY,
     email VARCHAR(255) NOT NULL,
     name VARCHAR(255),
     description TEXT,
     phone VARCHAR(50),
-    address_id VARCHAR(255) REFERENCES stripe_addresses ON DELETE CASCADE,
     created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now()
 );
 
@@ -47,8 +35,12 @@ CREATE TABLE stripe_subscriptions (
     id VARCHAR(255) PRIMARY KEY,
     customer_id VARCHAR(255) NOT NULL REFERENCES stripe_customers ON DELETE CASCADE,
     price_id VARCHAR(255) NOT NULL REFERENCES stripe_prices ON DELETE CASCADE,
-    current_period_start DATE,
-    current_period_end DATE,
+    current_period_start DATE NOT NULL,
+    current_period_end DATE NOT NULL,
+    trial_period_start DATE,
+    trial_period_end DATE,
+    canceled_at DATE,
+    canceled_at_period_end DATE,
     status VARCHAR,
     quantity int,
     metadata JSON,
@@ -56,7 +48,7 @@ CREATE TABLE stripe_subscriptions (
 );
 
 CREATE TABLE stripe_checkouts (
-    workspace_id VARCHAR,
+    workspace_id VARCHAR NOT NULL,
     session_id VARCHAR(255) PRIMARY KEY,
     price_id VARCHAR(255) NOT NULL REFERENCES stripe_prices ON DELETE CASCADE,
     customer_id VARCHAR(255) NOT NULL REFERENCES stripe_customers ON DELETE CASCADE,
@@ -65,10 +57,11 @@ CREATE TABLE stripe_checkouts (
     created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now()
 );
 
+ALTER TABLE stripe_customers ADD COLUMN tax_id VARCHAR(255);
+
 -- Down Migration
 DROP TABLE stripe_products;
 DROP TABLE stripe_prices;
 DROP TABLE stripe_checkouts;
 DROP TABLE stripe_subscriptions;
 DROP TABLE stripe_customers;
-DROP TABLE stripe_addresses;

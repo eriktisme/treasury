@@ -11,12 +11,14 @@ import {
 import {
   deleteStripeProduct,
   upsertStripeProduct,
-} from '../../../data/stripe_products.queries'
+} from '@/data/stripe_products.queries'
 import { createPool } from '@vercel/postgres'
 import {
   deleteStripePrice,
   upsertStripePrice,
-} from '../../../data/stripe_prices.queries'
+} from '@/data/stripe_prices.queries'
+import { upsertStripeSubscription } from '@/data/stripe_subscriptions.queries'
+import { getStripeCustomerById } from '@/data/stripe_customers.queries'
 
 const ConfigSchema = z.object({
   databaseUrl: z.string(),
@@ -90,7 +92,7 @@ app.openapi(post, async (c) => {
   /*
    * Verify the event by fetching it from Stripe
    *
-   * This is a workaround for the Hono API not supporting the raw body
+   * This is a workaround for the Hono API not supporting access to the raw body
    */
   try {
     stripeEvent = await stripe.events.retrieve(body.id)
@@ -126,6 +128,11 @@ app.openapi(post, async (c) => {
     }
     case 'price.deleted': {
       await handleDeletingStripePrice(stripeEvent.data.object)
+
+      break
+    }
+    case 'customer.subscription.updated': {
+      await handleCreateOrUpdateStripeSubscription(stripeEvent.data.object)
 
       break
     }
@@ -197,4 +204,49 @@ async function handleCreateOrUpdateStripePrice(price: Stripe.Price) {
 
 async function handleDeletingStripePrice(price: Stripe.Price) {
   await deleteStripePrice.run({ id: price.id }, pool)
+}
+
+async function handleCreateOrUpdateStripeSubscription(
+  subscription: Stripe.Subscription
+) {
+  const [customer] = await getStripeCustomerById.run(
+    { id: subscription.customer as string },
+    pool
+  )
+
+  if (!customer) {
+    // TODO: Think about how to report & handle errors
+
+    return
+  }
+
+  await upsertStripeSubscription.run(
+    {
+      subscription: {
+        canceledAt: subscription.canceled_at
+          ? new Date(subscription.canceled_at * 1000)
+          : null,
+        canceledAtPeriodEnd: subscription.cancel_at_period_end
+          ? new Date(subscription.current_period_end * 1000)
+          : null,
+        createdAt: new Date(subscription.created * 1000),
+        currentPeriodEnd: new Date(subscription.current_period_end * 1000),
+        currentPeriodStart: new Date(subscription.current_period_start * 1000),
+        customerId: customer.id,
+        id: subscription.id,
+        metadata: subscription.metadata,
+        priceId: subscription.items.data[0].price.id,
+        quantity: subscription.items.data[0].quantity ?? 1,
+        status: subscription.status,
+        trialPeriodEnd: subscription.trial_end
+          ? new Date(subscription.trial_end * 1000)
+          : null,
+        trialPeriodStart: subscription.trial_start
+          ? new Date(subscription.trial_start * 1000)
+          : null,
+        workspaceId: customer.workspaceId,
+      },
+    },
+    pool
+  )
 }

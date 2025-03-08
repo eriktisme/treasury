@@ -11,7 +11,7 @@
     "test": "jest --passWithNoTests",
     "test-coverage": "jest --coverage --passWithNoTests",
     "typeCheck": "tsc --noEmit",
-    "typegen": "pgtyped -c pgtyped.json",
+    "typegen": "pgtyped",
     "watch": "tsc -w"
   },
   "dependencies": {
@@ -29,7 +29,6 @@
   "devDependencies": {
     "@internal/cdk-utils": "workspace:*",
     "@internal/tsconfig": "workspace:*",
-    "@pgtyped/cli": "^2.4.2",
     "@types/jest": "^29.5.14",
     "@types/node": "^22.13.5",
     "jest": "^29.7.0"

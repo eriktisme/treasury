@@ -1,4 +1,4 @@
-/** Types generated for queries found in "src/src/data/stripe_prices.sql" */
+/** Types generated for queries found in "src/data/stripe_prices.sql" */
 import { PreparedQuery } from '@pgtyped/runtime'
 
 export type Json =

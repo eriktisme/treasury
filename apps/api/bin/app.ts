@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import 'source-map-support/register'
 import { App } from 'aws-cdk-lib'
-import { ApiService } from '../src'
+import { ApiService } from '../lib'
 
 const app = new App({
   analyticsReporting: false,
