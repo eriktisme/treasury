@@ -18,3 +18,8 @@ RETURNING *;
  @name DeleteStripePrice
 */
 DELETE FROM stripe_prices WHERE id = :id!;
+
+/*
+ @name GetStripePriceById
+*/
+SELECT * FROM stripe_prices WHERE id = :id!;

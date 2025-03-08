@@ -1,6 +1,6 @@
 import { createRoute, OpenAPIHono } from '@hono/zod-openapi'
 import { WebhookRequestSchema } from './schema'
-import type { Bindings } from '../../../bindings'
+import type { Bindings } from '@/bindings'
 import { analytics } from '@internal/analytics/posthog/server'
 import { z } from 'zod'
 import { Stripe } from 'stripe'

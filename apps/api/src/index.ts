@@ -19,9 +19,6 @@ const app = new OpenAPIHono<{ Bindings: Bindings }>({
 
 app.use(secureHeaders())
 
-app.route('v1', v1Routes)
-app.route('/webhooks', webhooksRoutes)
-
 app.openAPIRegistry.registerComponent('securitySchemes', 'Bearer', {
   type: 'http',
   scheme: 'bearer',
@@ -43,5 +40,7 @@ app.doc('/openapi', {
 })
 
 app.route('/health', healthRoutes)
+app.route('/webhooks', webhooksRoutes)
+app.route('v1', v1Routes)
 
 export const handler = handle(app)

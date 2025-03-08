@@ -57,7 +57,11 @@ CREATE TABLE stripe_checkouts (
     created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now()
 );
 
-ALTER TABLE stripe_customers ADD COLUMN tax_id VARCHAR(255);
+ALTER TABLE stripe_customers
+ADD COLUMN tax_id VARCHAR(255);
+
+ALTER TABLE stripe_checkouts
+ADD COLUMN "mode" VARCHAR(255) NOT NULL;
 
 -- Down Migration
 DROP TABLE stripe_products;

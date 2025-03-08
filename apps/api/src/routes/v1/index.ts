@@ -1,8 +1,9 @@
 import { OpenAPIHono } from '@hono/zod-openapi'
-import type { Bindings } from '../../bindings'
+import type { Bindings } from '@/bindings'
 import { clerkMiddleware } from '@hono/clerk-auth'
 import { z } from 'zod'
 import { cors } from 'hono/cors'
+import { app as billingRoutes } from './billing'
 
 const ConfigSchema = z.object({
   clerkSecretKey: z.string(),
@@ -16,6 +17,8 @@ const config = ConfigSchema.parse({
 
 export const app = new OpenAPIHono<{ Bindings: Bindings }>()
 
+app.route('/billing', billingRoutes)
+
 app.use(
   '*',
   clerkMiddleware({
@@ -27,7 +30,6 @@ app.use(
 app.use(
   '*',
   cors({
-    origin: '*',
     allowHeaders: [
       'Authorization',
       'Origin',
@@ -36,8 +38,9 @@ app.use(
       'Accept',
     ],
     allowMethods: ['POST', 'GET', 'OPTIONS', 'DELETE'],
+    credentials: true,
     exposeHeaders: [],
     maxAge: 600,
-    credentials: true,
+    origin: '*',
   })
 )
