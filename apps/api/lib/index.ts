@@ -3,7 +3,7 @@ import { Stack } from '@internal/cdk-utils/stack'
 import type { Construct } from 'constructs'
 import { NodeJSLambda } from '@internal/cdk-utils/lambda'
 import { FunctionUrlAuthType } from 'aws-cdk-lib/aws-lambda'
-import { EndpointType, LambdaRestApi } from 'aws-cdk-lib/aws-apigateway'
+import { Cors, EndpointType, LambdaRestApi } from 'aws-cdk-lib/aws-apigateway'
 import {
   Certificate,
   CertificateValidation,
@@ -69,6 +69,7 @@ export class ApiService extends Stack {
         CLERK_SECRET_KEY: props.clerk.secretKey,
         CLERK_WEBHOOK_SECRET: props.clerk.webhookSecret,
         DATABASE_URL: props.databaseUrl,
+        DOMAIN_NAME: props.domainName,
         EVENT_BUS_NAME: eventBus.eventBusName,
         POSTHOG_HOST: props.postHog.host,
         POSTHOG_KEY: props.postHog.key,
@@ -100,7 +101,11 @@ export class ApiService extends Stack {
           'Content-Type',
           'Accept',
         ],
-        allowOrigins: [`https://app.${props.domainName}`],
+        allowMethods: Cors.ALL_METHODS,
+        allowOrigins: [
+          `https://app.${props.domainName}`,
+          'http://localhost:3000',
+        ],
       },
       deployOptions: {
         tracingEnabled: true,

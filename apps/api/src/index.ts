@@ -6,6 +6,16 @@ import { app as v1Routes } from './routes/v1'
 import { app as webhooksRoutes } from './routes/webhooks'
 import { app as healthRoutes } from './routes/health'
 import { swaggerUI } from '@hono/swagger-ui'
+import { z } from 'zod'
+import { cors } from 'hono/cors'
+
+const ConfigSchema = z.object({
+  domainName: z.string(),
+})
+
+const config = ConfigSchema.parse({
+  domainName: process.env.DOMAIN_NAME,
+})
 
 const app = new OpenAPIHono<{ Bindings: Bindings }>({
   defaultHook: (result, c) => {
@@ -18,6 +28,23 @@ const app = new OpenAPIHono<{ Bindings: Bindings }>({
 })
 
 app.use(secureHeaders())
+
+app.use('*', (c, next) => {
+  const corsMiddleware = cors({
+    allowHeaders: [
+      'Authorization',
+      'Origin',
+      'X-Requested-With',
+      'Content-Type',
+      'Accept',
+    ],
+    credentials: true,
+    maxAge: 600,
+    origin: c.req.header('Origin') ?? `https://app.${config.domainName}`,
+  })
+
+  return corsMiddleware(c, next)
+})
 
 app.openAPIRegistry.registerComponent('securitySchemes', 'Bearer', {
   type: 'http',
