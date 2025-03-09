@@ -16,7 +16,7 @@ const { host, key } = ConfigSchema.parse({
 })
 
 export const analytics = posthog.init(key, {
-  api_host: '/ingest',
+  api_host: host,
   ui_host: host,
   person_profiles: 'identified_only',
   session_recording: {

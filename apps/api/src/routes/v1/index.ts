@@ -16,8 +16,6 @@ const config = ConfigSchema.parse({
 
 export const app = new OpenAPIHono<{ Bindings: Bindings }>()
 
-app.route('/billing', billingRoutes)
-
 app.use(
   '*',
   clerkMiddleware({
@@ -25,3 +23,5 @@ app.use(
     publishableKey: config.clerkPublishableKey,
   })
 )
+
+app.route('/billing', billingRoutes)

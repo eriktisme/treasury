@@ -21,7 +21,7 @@ export const WorkspaceSettingsPageTemplate = () => {
         scrollbarGutter: 'stable',
       }}
     >
-      <h1 className="mb-2 text-2xl font-medium">Workspace</h1>
+      <h1 className="text-2xl font-medium">Workspace</h1>
       <p className="mb-2 truncate text-base text-neutral-900">
         Change the settings for your current workspace.
       </p>

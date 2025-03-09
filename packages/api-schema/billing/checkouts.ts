@@ -30,11 +30,15 @@ export const Checkout = z.object({
   }),
 })
 
+export type Checkout = z.infer<typeof Checkout>
+
 export const CheckoutSchema = z
   .object({
     data: Checkout,
   })
   .openapi('CheckoutSchema')
+
+export type CheckoutResponse = z.infer<typeof CheckoutSchema>
 
 export const CreateCheckoutBodySchema = z.object({
   lookupKey: z.string().openapi({

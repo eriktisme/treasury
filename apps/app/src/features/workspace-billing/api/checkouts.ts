@@ -1,0 +1,33 @@
+import { env } from '@/env'
+import type { MutationConfig } from '@/lib/react-query'
+import { useMutation } from '@tanstack/react-query'
+import type { CreateCheckoutBody } from '@internal/api-schema/billing'
+import { useAuth } from '@clerk/nextjs'
+
+type Options = {
+  mutationConfig?: MutationConfig<typeof fetch>
+}
+
+export const useCreateCheckoutSession = <T>({ mutationConfig }: Options) => {
+  const { onSuccess, ...restConfig } = mutationConfig ?? {}
+
+  const { getToken } = useAuth()
+
+  return useMutation<T>({
+    onSuccess: async (...args) => {
+      onSuccess?.(...args)
+    },
+    ...restConfig,
+    mutationFn: async (body: CreateCheckoutBody) =>
+      fetch(`${env.NEXT_PUBLIC_API_URL}/billing/checkouts`, {
+        credentials: 'include',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${await getToken()}`,
+        },
+        method: 'POST',
+        body: JSON.stringify(body),
+      }).then((res) => res.json()),
+  })
+}

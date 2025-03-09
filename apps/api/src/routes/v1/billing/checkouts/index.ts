@@ -277,7 +277,7 @@ app.openapi(post, async (c) => {
         quantity: body.quantity,
         adjustable_quantity: {
           enabled: true,
-          minimum: 3,
+          minimum: body.quantity,
         },
       },
     ],
@@ -328,14 +328,18 @@ app.openapi(post, async (c) => {
   }
 
   const response = Checkout.safeParse({
-    sessionId: checkout.sessionId,
-    status: checkout.status,
-    priceId: checkout.priceId,
-    customerId: checkout.customerId,
-    mode: checkout.mode,
+    sessionId: session.id,
+    status: session.status ?? 'open',
+    priceId: price.id,
+    customerId: customer.id,
+    mode: session.mode,
   })
 
   if (!response.success) {
+    console.error('Failed to parse checkout response', {
+      error: response.error,
+    })
+
     return c.json(
       {
         code: 'internal_error',
