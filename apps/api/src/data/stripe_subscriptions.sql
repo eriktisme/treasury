@@ -31,4 +31,9 @@ SELECT * FROM stripe_subscriptions WHERE id = :id!;
 /*
  @name GetStripeSubscriptionByWorkspaceId
 */
-SELECT * FROM stripe_subscriptions WHERE workspace_id = :workspaceId!;
+SELECT
+  s.*,
+  p.id as product_id
+FROM stripe_subscriptions s
+JOIN stripe_products p ON s.price_id = p.id
+WHERE s.workspace_id = :workspaceId!;

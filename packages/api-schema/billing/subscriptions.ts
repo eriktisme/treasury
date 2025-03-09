@@ -1,6 +1,6 @@
 import { z } from '@hono/zod-openapi'
 
-const Subscription = z.object({
+export const Subscription = z.object({
   subscriptionId: z.string().uuid().openapi({
     description: 'The unique identifier for the workspace subscription.',
     example: '123e4567-e89b-12d3-a456-426614174001',
@@ -89,3 +89,5 @@ export const SubscriptionSchema = z
     data: z.union([Subscription, z.null()]),
   })
   .openapi('SubscriptionSchema')
+
+export type SubscriptionResponse = z.infer<typeof SubscriptionSchema>

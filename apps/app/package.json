@@ -16,6 +16,7 @@
     "@clerk/nextjs": "^6.12.0",
     "@hookform/resolvers": "^3.10.0",
     "@internal/analytics": "workspace:*",
+    "@internal/api-schema": "workspace:*",
     "@internal/design-system": "workspace:*",
     "@internal/next-config": "workspace:*",
     "@internal/seo": "workspace:*",

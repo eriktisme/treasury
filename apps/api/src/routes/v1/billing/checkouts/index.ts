@@ -5,7 +5,7 @@ import {
   CheckoutSchema,
   Checkout,
   CreateCheckoutBodySchema,
-} from './schema'
+} from '@internal/api-schema/billing'
 import { getAuth } from '@hono/clerk-auth'
 import {
   BadRequestErrorSchema,
@@ -19,7 +19,7 @@ import {
 } from '@/data/stripe_checkouts.queries'
 import { z } from 'zod'
 import { createPool } from '@vercel/postgres'
-import { getStripePriceById } from '@/data/stripe_prices.queries'
+import { getStripePriceByLookupKey } from '@/data/stripe_prices.queries'
 import { Stripe } from 'stripe'
 import { getStripeCustomerByWorkspaceId } from '@/data/stripe_customers.queries'
 
@@ -249,9 +249,9 @@ app.openapi(post, async (c) => {
     )
   }
 
-  const [price] = await getStripePriceById.run(
+  const [price] = await getStripePriceByLookupKey.run(
     {
-      id: body.priceId,
+      key: body.lookupKey,
     },
     pool
   )

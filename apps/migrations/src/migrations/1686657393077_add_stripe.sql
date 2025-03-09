@@ -20,6 +20,8 @@ CREATE TABLE stripe_prices (
     created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now()
 );
 
+ALTER TABLE stripe_prices ADD COLUMN lookup_key VARCHAR(255);
+
 CREATE TABLE stripe_customers (
     workspace_id VARCHAR NOT NULL UNIQUE,
     id VARCHAR(255) PRIMARY KEY,

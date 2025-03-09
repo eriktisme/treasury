@@ -191,6 +191,7 @@ async function handleCreateOrUpdateStripePrice(price: Stripe.Price) {
         active: price.active,
         currency: price.currency,
         id: price.id,
+        lookupKey: price.lookup_key,
         metadata: price.metadata,
         productId: price.product as string,
         recurringCount: price.recurring?.interval_count,

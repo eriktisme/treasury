@@ -15,6 +15,7 @@ export interface IUpsertStripePriceParams {
     active: boolean
     currency: string | null | void
     id: string
+    lookupKey: string | null | void
     metadata: Json | null | void
     productId: string
     recurringCount: number | null | void
@@ -29,6 +30,7 @@ export interface IUpsertStripePriceResult {
   createdAt: Date
   currency: string | null
   id: string
+  lookupKey: string | null
   metadata: Json | null
   productId: string
   recurringCount: number | null
@@ -59,19 +61,20 @@ const upsertStripePriceIR: any = {
           { name: 'recurringCount', required: false },
           { name: 'active', required: true },
           { name: 'metadata', required: false },
+          { name: 'lookupKey', required: false },
         ],
       },
-      locs: [{ a: 128, b: 133 }],
+      locs: [{ a: 140, b: 145 }],
     },
   ],
   statement:
-    'INSERT INTO stripe_prices (id, product_id, unit_amount, currency, recurring_interval, recurring_count, active, metadata)\nVALUES :price\nON CONFLICT (id) DO UPDATE SET\n    product_id = EXCLUDED.product_id,\n    unit_amount = EXCLUDED.unit_amount,\n    currency = EXCLUDED.currency,\n    recurring_interval = EXCLUDED.recurring_interval,\n    recurring_count = EXCLUDED.recurring_count,\n    active = EXCLUDED.active,\n    metadata = EXCLUDED.metadata\nRETURNING *',
+    'INSERT INTO stripe_prices (id, product_id, unit_amount, currency, recurring_interval, recurring_count, active, metadata, lookup_key)\nVALUES :price\nON CONFLICT (id) DO UPDATE SET\n    product_id = EXCLUDED.product_id,\n    unit_amount = EXCLUDED.unit_amount,\n    currency = EXCLUDED.currency,\n    recurring_interval = EXCLUDED.recurring_interval,\n    recurring_count = EXCLUDED.recurring_count,\n    active = EXCLUDED.active,\n    lookup_key = EXCLUDED.lookup_key,\n    metadata = EXCLUDED.metadata\nRETURNING *',
 }
 
 /**
  * Query generated from SQL:
  * ```
- * INSERT INTO stripe_prices (id, product_id, unit_amount, currency, recurring_interval, recurring_count, active, metadata)
+ * INSERT INTO stripe_prices (id, product_id, unit_amount, currency, recurring_interval, recurring_count, active, metadata, lookup_key)
  * VALUES :price
  * ON CONFLICT (id) DO UPDATE SET
  *     product_id = EXCLUDED.product_id,
@@ -80,6 +83,7 @@ const upsertStripePriceIR: any = {
  *     recurring_interval = EXCLUDED.recurring_interval,
  *     recurring_count = EXCLUDED.recurring_count,
  *     active = EXCLUDED.active,
+ *     lookup_key = EXCLUDED.lookup_key,
  *     metadata = EXCLUDED.metadata
  * RETURNING *
  * ```
@@ -138,6 +142,7 @@ export interface IGetStripePriceByIdResult {
   createdAt: Date
   currency: string | null
   id: string
+  lookupKey: string | null
   metadata: Json | null
   productId: string
   recurringCount: number | null
@@ -174,3 +179,52 @@ export const getStripePriceById = new PreparedQuery<
   IGetStripePriceByIdParams,
   IGetStripePriceByIdResult
 >(getStripePriceByIdIR)
+
+/** 'GetStripePriceByLookupKey' parameters type */
+export interface IGetStripePriceByLookupKeyParams {
+  key: string
+}
+
+/** 'GetStripePriceByLookupKey' return type */
+export interface IGetStripePriceByLookupKeyResult {
+  active: boolean
+  createdAt: Date
+  currency: string | null
+  id: string
+  lookupKey: string | null
+  metadata: Json | null
+  productId: string
+  recurringCount: number | null
+  recurringInterval: string | null
+  unitAmount: number | null
+}
+
+/** 'GetStripePriceByLookupKey' query type */
+export interface IGetStripePriceByLookupKeyQuery {
+  params: IGetStripePriceByLookupKeyParams
+  result: IGetStripePriceByLookupKeyResult
+}
+
+const getStripePriceByLookupKeyIR: any = {
+  usedParamSet: { key: true },
+  params: [
+    {
+      name: 'key',
+      required: true,
+      transform: { type: 'scalar' },
+      locs: [{ a: 47, b: 51 }],
+    },
+  ],
+  statement: 'SELECT * FROM stripe_prices WHERE lookup_key = :key!',
+}
+
+/**
+ * Query generated from SQL:
+ * ```
+ * SELECT * FROM stripe_prices WHERE lookup_key = :key!
+ * ```
+ */
+export const getStripePriceByLookupKey = new PreparedQuery<
+  IGetStripePriceByLookupKeyParams,
+  IGetStripePriceByLookupKeyResult
+>(getStripePriceByLookupKeyIR)

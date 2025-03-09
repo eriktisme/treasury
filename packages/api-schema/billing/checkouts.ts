@@ -37,9 +37,9 @@ export const CheckoutSchema = z
   .openapi('CheckoutSchema')
 
 export const CreateCheckoutBodySchema = z.object({
-  priceId: z.string().openapi({
+  lookupKey: z.string().openapi({
     description: 'The unique identifier for the price.',
-    example: 'price_1R07gAJxehjHwVZTRxpJtiDK',
+    examples: ['basic_monthly', 'basic_yearly'],
   }),
   quantity: z.number().positive().openapi({
     description: 'The amount of the product to purchase.',
@@ -50,3 +50,5 @@ export const CreateCheckoutBodySchema = z.object({
     example: 'https://example.com/checkout/success',
   }),
 })
+
+export type CreateCheckoutBody = z.infer<typeof CreateCheckoutBodySchema>

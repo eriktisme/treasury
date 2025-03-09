@@ -219,6 +219,7 @@ export interface IGetStripeSubscriptionByWorkspaceIdResult {
   id: string
   metadata: Json | null
   priceId: string
+  productId: string
   quantity: number | null
   status: string | null
   trialPeriodEnd: Date | null
@@ -239,17 +240,22 @@ const getStripeSubscriptionByWorkspaceIdIR: any = {
       name: 'workspaceId',
       required: true,
       transform: { type: 'scalar' },
-      locs: [{ a: 56, b: 68 }],
+      locs: [{ a: 130, b: 142 }],
     },
   ],
   statement:
-    'SELECT * FROM stripe_subscriptions WHERE workspace_id = :workspaceId!',
+    'SELECT\n  s.*,\n  p.id as product_id\nFROM stripe_subscriptions s\nJOIN stripe_products p ON s.price_id = p.id\nWHERE s.workspace_id = :workspaceId!',
 }
 
 /**
  * Query generated from SQL:
  * ```
- * SELECT * FROM stripe_subscriptions WHERE workspace_id = :workspaceId!
+ * SELECT
+ *   s.*,
+ *   p.id as product_id
+ * FROM stripe_subscriptions s
+ * JOIN stripe_products p ON s.price_id = p.id
+ * WHERE s.workspace_id = :workspaceId!
  * ```
  */
 export const getStripeSubscriptionByWorkspaceId = new PreparedQuery<
