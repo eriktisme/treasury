@@ -12,14 +12,22 @@ import type {
 import { analytics } from '@internal/analytics/posthog/server'
 import { z } from 'zod'
 import { Webhook } from 'svix'
+import {
+  EventBridgeClient,
+  PutEventsCommand,
+} from '@aws-sdk/client-eventbridge'
 
 const ConfigSchema = z.object({
   clerkWebhookSecret: z.string(),
+  eventBusName: z.string(),
 })
 
 const config = ConfigSchema.parse({
   clerkWebhookSecret: process.env.CLERK_WEBHOOK_SECRET,
+  eventBusName: process.env.EVENT_BUS_NAME,
 })
+
+const eventBridgeClient = new EventBridgeClient()
 
 const handleUserCreated = (data: UserJSON) => {
   analytics.identify({
@@ -261,6 +269,20 @@ app.openapi(post, async (c) => {
   }
 
   await analytics.shutdown()
+
+  await eventBridgeClient.send(
+    new PutEventsCommand({
+      Entries: [
+        {
+          Detail: JSON.stringify(event.data),
+          DetailType: eventType,
+          EventBusName: config.eventBusName,
+          Source: 'clerk',
+          Time: new Date(),
+        },
+      ],
+    })
+  )
 
   return c.text(response, 201)
 })

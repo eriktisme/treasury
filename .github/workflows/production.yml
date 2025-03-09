@@ -120,6 +120,14 @@ jobs:
         env:
           DOMAIN_NAME: ${{ secrets.DOMAIN_NAME }}
 
+      - run: pnpm cdk:engine -- deploy --all --require-approval never
+        env:
+          CLERK_SECRET_KEY: ${{ secrets.CLERK_SECRET_KEY }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          POSTHOG_KEY: ${{ secrets.POSTHOG_KEY }}
+          POSTHOG_HOST: ${{ secrets.POSTHOG_HOST }}
+          STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
+
       - run: pnpm cdk:api -- deploy --all --require-approval never
         env:
           CLERK_SECRET_KEY: ${{ secrets.CLERK_SECRET_KEY }}
@@ -129,5 +137,7 @@ jobs:
           DOMAIN_NAME: ${{ secrets.DOMAIN_NAME }}
           POSTHOG_KEY: ${{ secrets.POSTHOG_KEY }}
           POSTHOG_HOST: ${{ secrets.POSTHOG_HOST }}
+          STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
+          STRIPE_WEBHOOK_SECRET: ${{ secrets.STRIPE_WEBHOOK_SECRET }}
 
       - run: pnpm vercel deploy --prod --token=${{ secrets.VERCEL_TOKEN }}

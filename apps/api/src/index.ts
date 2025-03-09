@@ -1,95 +1,73 @@
-import type { StackProps } from '@internal/cdk-utils/stack'
-import { Stack } from '@internal/cdk-utils/stack'
-import type { Construct } from 'constructs'
-import { NodeJSLambda } from '@internal/cdk-utils/lambda'
-import { join } from 'path'
-import { FunctionUrlAuthType } from 'aws-cdk-lib/aws-lambda'
-import { EndpointType, LambdaRestApi } from 'aws-cdk-lib/aws-apigateway'
-import {
-  Certificate,
-  CertificateValidation,
-} from 'aws-cdk-lib/aws-certificatemanager'
-import { StringParameter } from 'aws-cdk-lib/aws-ssm'
-import {
-  ARecord,
-  PublicHostedZone,
-  RecordTarget,
-} from 'aws-cdk-lib/aws-route53'
-import { ApiGateway } from 'aws-cdk-lib/aws-route53-targets'
+import { OpenAPIHono } from '@hono/zod-openapi'
+import { handle } from 'hono/aws-lambda'
+import { secureHeaders } from 'hono/secure-headers'
+import type { Bindings } from './bindings'
+import { app as v1Routes } from './routes/v1'
+import { app as webhooksRoutes } from './routes/webhooks'
+import { app as healthRoutes } from './routes/health'
+import { swaggerUI } from '@hono/swagger-ui'
+import { z } from 'zod'
+import { cors } from 'hono/cors'
 
-interface Props extends StackProps {
-  clerk: {
-    publishableKey: string
-    secretKey: string
-    webhookSecret: string
-  }
-  databaseUrl: string
-  domainName: string
-  postHog: {
-    host: string
-    key: string
-  }
-}
+const ConfigSchema = z.object({
+  domainName: z.string(),
+})
 
-export class ApiService extends Stack {
-  constructor(scope: Construct, id: string, props: Props) {
-    super(scope, id, props)
+const config = ConfigSchema.parse({
+  domainName: process.env.DOMAIN_NAME,
+})
 
-    const hostedZoneId = StringParameter.fromStringParameterName(
-      this,
-      'hosted-zone-id',
-      `/${props.stage}/hosted-zone-id`
-    ).stringValue
+const app = new OpenAPIHono<{ Bindings: Bindings }>({
+  defaultHook: (result, c) => {
+    if (!result.success) {
+      return c.json({ success: false, errors: result.error.errors }, 422)
+    }
 
-    const zone = PublicHostedZone.fromPublicHostedZoneAttributes(
-      this,
-      'hosted-zone',
-      {
-        zoneName: props.domainName,
-        hostedZoneId,
-      }
-    )
+    return c.json({ success: true }, 200)
+  },
+})
 
-    const handler = new NodeJSLambda(this, 'handler', {
-      entry: join(__dirname, './src/index.ts'),
-      environment: {
-        CLERK_PUBLISHABLE_KEY: props.clerk.publishableKey,
-        CLERK_SECRET_KEY: props.clerk.secretKey,
-        CLERK_WEBHOOK_SECRET: props.clerk.webhookSecret,
-        DATABASE_URL: props.databaseUrl,
-        POSTHOG_HOST: props.postHog.host,
-        POSTHOG_KEY: props.postHog.key,
-      },
-    })
+app.use(secureHeaders())
 
-    handler.addFunctionUrl({
-      authType: FunctionUrlAuthType.NONE,
-    })
+app.use('*', (c, next) => {
+  const corsMiddleware = cors({
+    allowHeaders: [
+      'Authorization',
+      'Origin',
+      'X-Requested-With',
+      'Content-Type',
+      'Accept',
+    ],
+    credentials: true,
+    maxAge: 600,
+    origin: c.req.header('Origin') ?? `https://app.${config.domainName}`,
+  })
 
-    const domainName = `api.${props.domainName}`
+  return corsMiddleware(c, next)
+})
 
-    const certificate = new Certificate(this, 'certificate', {
-      domainName,
-      validation: CertificateValidation.fromDns(zone),
-    })
+app.openAPIRegistry.registerComponent('securitySchemes', 'Bearer', {
+  type: 'http',
+  scheme: 'bearer',
+})
 
-    const restApi = new LambdaRestApi(this, 'api', {
-      deployOptions: {
-        tracingEnabled: true,
-      },
-      domainName: {
-        certificate,
-        domainName,
-      },
-      endpointTypes: [EndpointType.REGIONAL],
-      handler,
-      restApiName: `${props.stage}-api`,
-    })
+app.get(
+  '/',
+  swaggerUI({
+    url: '/openapi',
+  })
+)
 
-    new ARecord(this, 'api-a', {
-      recordName: domainName,
-      zone,
-      target: RecordTarget.fromAlias(new ApiGateway(restApi)),
-    })
-  }
-}
+app.doc('/openapi', {
+  openapi: '3.1.0',
+  info: {
+    version: '0.1.0',
+    title: 'Connect-CRM API',
+  },
+})
+
+app.route('/health', healthRoutes)
+app.route('/webhooks', webhooksRoutes)
+app.route('v1', v1Routes)
+
+export const handler = handle(app)
