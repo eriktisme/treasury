@@ -23,7 +23,7 @@ export interface IUpsertStripeProductParams {
 /** 'UpsertStripeProduct' return type */
 export interface IUpsertStripeProductResult {
   active: boolean
-  createdAt: Date
+  created_at: Date
   description: string | null
   id: string
   metadata: Json | null

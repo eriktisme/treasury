@@ -88,26 +88,32 @@ app.openapi(get, async (c) => {
   }
 
   const response = Subscription.safeParse({
-    subscriptionId: subscription.id,
-    status: subscription.status,
+    canceledAt: subscription.canceled_at,
+    canceledAtPeriodEnd: subscription.canceled_at_period_end !== null,
     collectionMethod: 'charge_automatically',
     currentPeriod: {
-      start: subscription.currentPeriodStart,
-      end: subscription.currentPeriodEnd,
+      start: subscription.current_period_start,
+      end: subscription.current_period_end,
     },
     seat: {
-      productId: subscription.productId,
-      priceId: subscription.priceId,
+      productId: subscription.product_id,
+      priceId: subscription.price_id,
       quantity: subscription.quantity,
     },
+    startedAt: subscription.created_at,
+    status: subscription.status,
+    subscriptionId: subscription.id,
     trial: {
-      start: subscription.trialPeriodStart,
-      end: subscription.trialPeriodEnd,
+      start: subscription.trial_period_start,
+      end: subscription.trial_period_end,
     },
-    quantity: subscription.quantity,
   })
 
   if (!response.success) {
+    console.error('Failed to parse subscription response', {
+      error: response.error,
+    })
+
     return c.json(
       {
         code: 'internal_error',

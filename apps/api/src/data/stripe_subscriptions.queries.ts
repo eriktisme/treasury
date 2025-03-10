@@ -33,20 +33,20 @@ export interface IUpsertStripeSubscriptionParams {
 
 /** 'UpsertStripeSubscription' return type */
 export interface IUpsertStripeSubscriptionResult {
-  canceledAt: Date | null
-  canceledAtPeriodEnd: Date | null
-  createdAt: Date
-  currentPeriodEnd: Date
-  currentPeriodStart: Date
-  customerId: string
+  canceled_at: Date | null
+  canceled_at_period_end: Date | null
+  created_at: Date
+  current_period_end: Date
+  current_period_start: Date
+  customer_id: string
   id: string
   metadata: Json | null
-  priceId: string
+  price_id: string
   quantity: number | null
   status: string | null
-  trialPeriodEnd: Date | null
-  trialPeriodStart: Date | null
-  workspaceId: string
+  trial_period_end: Date | null
+  trial_period_start: Date | null
+  workspace_id: string
 }
 
 /** 'UpsertStripeSubscription' query type */
@@ -157,20 +157,20 @@ export interface IGetStripeSubscriptionByIdParams {
 
 /** 'GetStripeSubscriptionById' return type */
 export interface IGetStripeSubscriptionByIdResult {
-  canceledAt: Date | null
-  canceledAtPeriodEnd: Date | null
-  createdAt: Date
-  currentPeriodEnd: Date
-  currentPeriodStart: Date
-  customerId: string
+  canceled_at: Date | null
+  canceled_at_period_end: Date | null
+  created_at: Date
+  current_period_end: Date
+  current_period_start: Date
+  customer_id: string
   id: string
   metadata: Json | null
-  priceId: string
+  price_id: string
   quantity: number | null
   status: string | null
-  trialPeriodEnd: Date | null
-  trialPeriodStart: Date | null
-  workspaceId: string
+  trial_period_end: Date | null
+  trial_period_start: Date | null
+  workspace_id: string
 }
 
 /** 'GetStripeSubscriptionById' query type */
@@ -210,21 +210,21 @@ export interface IGetStripeSubscriptionByWorkspaceIdParams {
 
 /** 'GetStripeSubscriptionByWorkspaceId' return type */
 export interface IGetStripeSubscriptionByWorkspaceIdResult {
-  canceledAt: Date | null
-  canceledAtPeriodEnd: Date | null
-  createdAt: Date
-  currentPeriodEnd: Date
-  currentPeriodStart: Date
-  customerId: string
+  canceled_at: Date | null
+  canceled_at_period_end: Date | null
+  created_at: Date
+  current_period_end: Date
+  current_period_start: Date
+  customer_id: string
   id: string
   metadata: Json | null
-  priceId: string
-  productId: string
+  price_id: string
+  product_id: string
   quantity: number | null
   status: string | null
-  trialPeriodEnd: Date | null
-  trialPeriodStart: Date | null
-  workspaceId: string
+  trial_period_end: Date | null
+  trial_period_start: Date | null
+  workspace_id: string
 }
 
 /** 'GetStripeSubscriptionByWorkspaceId' query type */
@@ -240,11 +240,11 @@ const getStripeSubscriptionByWorkspaceIdIR: any = {
       name: 'workspaceId',
       required: true,
       transform: { type: 'scalar' },
-      locs: [{ a: 130, b: 142 }],
+      locs: [{ a: 204, b: 216 }],
     },
   ],
   statement:
-    'SELECT\n  s.*,\n  p.id as product_id\nFROM stripe_subscriptions s\nJOIN stripe_products p ON s.price_id = p.id\nWHERE s.workspace_id = :workspaceId!',
+    'SELECT\n  s.*,\n  product.id as product_id\nFROM stripe_subscriptions s\nJOIN stripe_prices price ON s.price_id = price.id\nJOIN stripe_products product ON price.product_id = product.id\nWHERE s.workspace_id = :workspaceId!',
 }
 
 /**
@@ -252,9 +252,10 @@ const getStripeSubscriptionByWorkspaceIdIR: any = {
  * ```
  * SELECT
  *   s.*,
- *   p.id as product_id
+ *   product.id as product_id
  * FROM stripe_subscriptions s
- * JOIN stripe_products p ON s.price_id = p.id
+ * JOIN stripe_prices price ON s.price_id = price.id
+ * JOIN stripe_products product ON price.product_id = product.id
  * WHERE s.workspace_id = :workspaceId!
  * ```
  */

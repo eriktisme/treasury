@@ -1,5 +1,4 @@
 {
-  "camelCaseColumnNames": true,
   "db": {
     "ssl": true
   },

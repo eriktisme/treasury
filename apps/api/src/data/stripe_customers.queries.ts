@@ -8,14 +8,14 @@ export interface IGetStripeCustomerByWorkspaceIdParams {
 
 /** 'GetStripeCustomerByWorkspaceId' return type */
 export interface IGetStripeCustomerByWorkspaceIdResult {
-  createdAt: Date
+  created_at: Date
   description: string | null
   email: string
   id: string
   name: string | null
   phone: string | null
-  taxId: string | null
-  workspaceId: string
+  tax_id: string | null
+  workspace_id: string
 }
 
 /** 'GetStripeCustomerByWorkspaceId' query type */
@@ -56,14 +56,14 @@ export interface IGetStripeCustomerByIdParams {
 
 /** 'GetStripeCustomerById' return type */
 export interface IGetStripeCustomerByIdResult {
-  createdAt: Date
+  created_at: Date
   description: string | null
   email: string
   id: string
   name: string | null
   phone: string | null
-  taxId: string | null
-  workspaceId: string
+  tax_id: string | null
+  workspace_id: string
 }
 
 /** 'GetStripeCustomerById' query type */
@@ -108,14 +108,14 @@ export interface IUpdateStripeCustomerByIdParams {
 
 /** 'UpdateStripeCustomerById' return type */
 export interface IUpdateStripeCustomerByIdResult {
-  createdAt: Date
+  created_at: Date
   description: string | null
   email: string
   id: string
   name: string | null
   phone: string | null
-  taxId: string | null
-  workspaceId: string
+  tax_id: string | null
+  workspace_id: string
 }
 
 /** 'UpdateStripeCustomerById' query type */

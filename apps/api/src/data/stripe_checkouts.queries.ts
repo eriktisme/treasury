@@ -11,31 +11,31 @@ export type Json =
   | Json[]
   | { [key: string]: Json }
 
-/** 'GetStripeCheckoutById' parameters type */
-export interface IGetStripeCheckoutByIdParams {
+/** 'GetStripeCheckoutByIdAndWorkspaceId' parameters type */
+export interface IGetStripeCheckoutByIdAndWorkspaceIdParams {
   id: string
   workspaceId: string
 }
 
-/** 'GetStripeCheckoutById' return type */
-export interface IGetStripeCheckoutByIdResult {
-  createdAt: Date
-  customerId: string
+/** 'GetStripeCheckoutByIdAndWorkspaceId' return type */
+export interface IGetStripeCheckoutByIdAndWorkspaceIdResult {
+  created_at: Date
+  customer_id: string
   metadata: Json | null
   mode: string
-  priceId: string
-  sessionId: string
+  price_id: string
+  session_id: string
   status: string | null
-  workspaceId: string
+  workspace_id: string
 }
 
-/** 'GetStripeCheckoutById' query type */
-export interface IGetStripeCheckoutByIdQuery {
-  params: IGetStripeCheckoutByIdParams
-  result: IGetStripeCheckoutByIdResult
+/** 'GetStripeCheckoutByIdAndWorkspaceId' query type */
+export interface IGetStripeCheckoutByIdAndWorkspaceIdQuery {
+  params: IGetStripeCheckoutByIdAndWorkspaceIdParams
+  result: IGetStripeCheckoutByIdAndWorkspaceIdResult
 }
 
-const getStripeCheckoutByIdIR: any = {
+const getStripeCheckoutByIdAndWorkspaceIdIR: any = {
   usedParamSet: { id: true, workspaceId: true },
   params: [
     {
@@ -61,6 +61,53 @@ const getStripeCheckoutByIdIR: any = {
  * SELECT * FROM stripe_checkouts WHERE session_id = :id! AND workspace_id = :workspaceId!
  * ```
  */
+export const getStripeCheckoutByIdAndWorkspaceId = new PreparedQuery<
+  IGetStripeCheckoutByIdAndWorkspaceIdParams,
+  IGetStripeCheckoutByIdAndWorkspaceIdResult
+>(getStripeCheckoutByIdAndWorkspaceIdIR)
+
+/** 'GetStripeCheckoutById' parameters type */
+export interface IGetStripeCheckoutByIdParams {
+  id: string
+}
+
+/** 'GetStripeCheckoutById' return type */
+export interface IGetStripeCheckoutByIdResult {
+  created_at: Date
+  customer_id: string
+  metadata: Json | null
+  mode: string
+  price_id: string
+  session_id: string
+  status: string | null
+  workspace_id: string
+}
+
+/** 'GetStripeCheckoutById' query type */
+export interface IGetStripeCheckoutByIdQuery {
+  params: IGetStripeCheckoutByIdParams
+  result: IGetStripeCheckoutByIdResult
+}
+
+const getStripeCheckoutByIdIR: any = {
+  usedParamSet: { id: true },
+  params: [
+    {
+      name: 'id',
+      required: true,
+      transform: { type: 'scalar' },
+      locs: [{ a: 50, b: 53 }],
+    },
+  ],
+  statement: 'SELECT * FROM stripe_checkouts WHERE session_id = :id!',
+}
+
+/**
+ * Query generated from SQL:
+ * ```
+ * SELECT * FROM stripe_checkouts WHERE session_id = :id!
+ * ```
+ */
 export const getStripeCheckoutById = new PreparedQuery<
   IGetStripeCheckoutByIdParams,
   IGetStripeCheckoutByIdResult
@@ -82,14 +129,14 @@ export interface IInsertStripeCheckoutParams {
 
 /** 'InsertStripeCheckout' return type */
 export interface IInsertStripeCheckoutResult {
-  createdAt: Date
-  customerId: string
+  created_at: Date
+  customer_id: string
   metadata: Json | null
   mode: string
-  priceId: string
-  sessionId: string
+  price_id: string
+  session_id: string
   status: string | null
-  workspaceId: string
+  workspace_id: string
 }
 
 /** 'InsertStripeCheckout' query type */
@@ -136,3 +183,61 @@ export const insertStripeCheckout = new PreparedQuery<
   IInsertStripeCheckoutParams,
   IInsertStripeCheckoutResult
 >(insertStripeCheckoutIR)
+
+/** 'UpdateStripeCheckoutStatus' parameters type */
+export interface IUpdateStripeCheckoutStatusParams {
+  sessionId: string
+  status: string
+}
+
+/** 'UpdateStripeCheckoutStatus' return type */
+export interface IUpdateStripeCheckoutStatusResult {
+  created_at: Date
+  customer_id: string
+  metadata: Json | null
+  mode: string
+  price_id: string
+  session_id: string
+  status: string | null
+  workspace_id: string
+}
+
+/** 'UpdateStripeCheckoutStatus' query type */
+export interface IUpdateStripeCheckoutStatusQuery {
+  params: IUpdateStripeCheckoutStatusParams
+  result: IUpdateStripeCheckoutStatusResult
+}
+
+const updateStripeCheckoutStatusIR: any = {
+  usedParamSet: { status: true, sessionId: true },
+  params: [
+    {
+      name: 'status',
+      required: true,
+      transform: { type: 'scalar' },
+      locs: [{ a: 37, b: 44 }],
+    },
+    {
+      name: 'sessionId',
+      required: true,
+      transform: { type: 'scalar' },
+      locs: [{ a: 65, b: 75 }],
+    },
+  ],
+  statement:
+    'UPDATE stripe_checkouts\nSET status = :status!\nWHERE session_id = :sessionId!\nRETURNING *',
+}
+
+/**
+ * Query generated from SQL:
+ * ```
+ * UPDATE stripe_checkouts
+ * SET status = :status!
+ * WHERE session_id = :sessionId!
+ * RETURNING *
+ * ```
+ */
+export const updateStripeCheckoutStatus = new PreparedQuery<
+  IUpdateStripeCheckoutStatusParams,
+  IUpdateStripeCheckoutStatusResult
+>(updateStripeCheckoutStatusIR)

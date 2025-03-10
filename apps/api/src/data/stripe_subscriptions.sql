@@ -33,7 +33,8 @@ SELECT * FROM stripe_subscriptions WHERE id = :id!;
 */
 SELECT
   s.*,
-  p.id as product_id
+  product.id as product_id
 FROM stripe_subscriptions s
-JOIN stripe_products p ON s.price_id = p.id
+JOIN stripe_prices price ON s.price_id = price.id
+JOIN stripe_products product ON price.product_id = product.id
 WHERE s.workspace_id = :workspaceId!;

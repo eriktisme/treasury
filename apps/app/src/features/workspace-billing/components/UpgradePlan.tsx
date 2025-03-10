@@ -5,7 +5,6 @@ import { useCreateCheckoutSession } from '../api'
 import { useOrganization } from '@clerk/nextjs'
 import { usePathname } from 'next/navigation'
 import { env } from '@/env'
-import type { CheckoutResponse } from '@internal/api-schema/billing'
 import { loadStripe } from '@stripe/stripe-js'
 
 export const UpgradePlan = () => {
@@ -13,11 +12,9 @@ export const UpgradePlan = () => {
 
   const pathname = usePathname()
 
-  const createCheckoutSession = useCreateCheckoutSession<CheckoutResponse>({
+  const createCheckoutSession = useCreateCheckoutSession({
     mutationConfig: {
-      onSuccess: async (response) => {
-        const { data } = response as unknown as CheckoutResponse
-
+      onSuccess: async ({ data }) => {
         const stripe = await loadStripe(env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY)
 
         await stripe?.redirectToCheckout({

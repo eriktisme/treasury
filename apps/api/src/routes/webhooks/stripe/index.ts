@@ -19,6 +19,10 @@ import {
 } from '@/data/stripe_prices.queries'
 import { upsertStripeSubscription } from '@/data/stripe_subscriptions.queries'
 import { getStripeCustomerById } from '@/data/stripe_customers.queries'
+import {
+  getStripeCheckoutById,
+  updateStripeCheckoutStatus,
+} from '@/data/stripe_checkouts.queries'
 
 const ConfigSchema = z.object({
   databaseUrl: z.string(),
@@ -82,6 +86,32 @@ const post = createRoute({
   },
 })
 
+async function handeCheckoutSessionCompleted(session: Stripe.Checkout.Session) {
+  const [checkout] = await getStripeCheckoutById.run(
+    {
+      id: session.id,
+    },
+    pool
+  )
+
+  if (!checkout) {
+    console.warn('Failed to find out checkout', {
+      sessionId: session.id,
+    })
+
+    return
+  }
+
+  await handleCreateOrUpdateStripeSubscription(
+    await stripe.subscriptions.retrieve(session.subscription as string)
+  )
+
+  await updateStripeCheckoutStatus.run(
+    { status: session.status as string, sessionId: session.id },
+    pool
+  )
+}
+
 app.openapi(post, async (c) => {
   const request = c.req
 
@@ -133,6 +163,11 @@ app.openapi(post, async (c) => {
     }
     case 'customer.subscription.updated': {
       await handleCreateOrUpdateStripeSubscription(stripeEvent.data.object)
+
+      break
+    }
+    case 'checkout.session.completed': {
+      await handeCheckoutSessionCompleted(stripeEvent.data.object)
 
       break
     }
@@ -245,7 +280,7 @@ async function handleCreateOrUpdateStripeSubscription(
         trialPeriodStart: subscription.trial_start
           ? new Date(subscription.trial_start * 1000)
           : null,
-        workspaceId: customer.workspaceId,
+        workspaceId: customer.workspace_id,
       },
     },
     pool

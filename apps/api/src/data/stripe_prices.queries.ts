@@ -27,15 +27,15 @@ export interface IUpsertStripePriceParams {
 /** 'UpsertStripePrice' return type */
 export interface IUpsertStripePriceResult {
   active: boolean
-  createdAt: Date
+  created_at: Date
   currency: string | null
   id: string
-  lookupKey: string | null
+  lookup_key: string | null
   metadata: Json | null
-  productId: string
-  recurringCount: number | null
-  recurringInterval: string | null
-  unitAmount: number | null
+  product_id: string
+  recurring_count: number | null
+  recurring_interval: string | null
+  unit_amount: number | null
 }
 
 /** 'UpsertStripePrice' query type */
@@ -139,15 +139,15 @@ export interface IGetStripePriceByIdParams {
 /** 'GetStripePriceById' return type */
 export interface IGetStripePriceByIdResult {
   active: boolean
-  createdAt: Date
+  created_at: Date
   currency: string | null
   id: string
-  lookupKey: string | null
+  lookup_key: string | null
   metadata: Json | null
-  productId: string
-  recurringCount: number | null
-  recurringInterval: string | null
-  unitAmount: number | null
+  product_id: string
+  recurring_count: number | null
+  recurring_interval: string | null
+  unit_amount: number | null
 }
 
 /** 'GetStripePriceById' query type */
@@ -188,15 +188,15 @@ export interface IGetStripePriceByLookupKeyParams {
 /** 'GetStripePriceByLookupKey' return type */
 export interface IGetStripePriceByLookupKeyResult {
   active: boolean
-  createdAt: Date
+  created_at: Date
   currency: string | null
   id: string
-  lookupKey: string | null
+  lookup_key: string | null
   metadata: Json | null
-  productId: string
-  recurringCount: number | null
-  recurringInterval: string | null
-  unitAmount: number | null
+  product_id: string
+  recurring_count: number | null
+  recurring_interval: string | null
+  unit_amount: number | null
 }
 
 /** 'GetStripePriceByLookupKey' query type */

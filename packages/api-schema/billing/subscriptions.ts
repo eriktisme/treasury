@@ -1,9 +1,9 @@
 import { z } from '@hono/zod-openapi'
 
 export const Subscription = z.object({
-  subscriptionId: z.string().uuid().openapi({
+  subscriptionId: z.string().openapi({
     description: 'The unique identifier for the workspace subscription.',
-    example: '123e4567-e89b-12d3-a456-426614174001',
+    example: 'sub_1R0lVhJxehjHwVZTqVp7i9XP',
   }),
   status: z.string().openapi({
     description: 'The status of the subscription.',
@@ -24,11 +24,11 @@ export const Subscription = z.object({
   }),
   currentPeriod: z
     .object({
-      start: z.string().datetime().openapi({
+      start: z.date().openapi({
         description: 'The start date of the current period.',
         example: '2023-01-01T00:00:00Z',
       }),
-      end: z.string().datetime().openapi({
+      end: z.date().openapi({
         description: 'The end date of the current period.',
         example: '2023-12-31T23:59:59Z',
       }),
@@ -42,7 +42,7 @@ export const Subscription = z.object({
         description: 'The unique identifier for the product.',
         example: 'prod_RtvP9Fh5aO7dh6',
       }),
-      priceId: z.string().uuid().openapi({
+      priceId: z.string().openapi({
         description: 'The unique identifier for the price.',
         example: 'price_1R07gAJxehjHwVZTRxpJtiDK',
       }),
@@ -56,16 +56,15 @@ export const Subscription = z.object({
     }),
   trial: z
     .object({
-      start: z.string().datetime().openapi({
+      start: z.date().nullable().openapi({
         description: 'The start date of the trial period.',
         example: '2023-01-01T00:00:00Z',
       }),
-      end: z.string().datetime().openapi({
+      end: z.date().nullable().openapi({
         description: 'The end date of the trial period.',
         example: '2023-01-31T23:59:59Z',
       }),
     })
-    .optional()
     .openapi({
       description: 'The trial period for the subscription, if applicable.',
     }),
@@ -74,11 +73,11 @@ export const Subscription = z.object({
       'Indicates if the subscription is canceled at the end of the period.',
     example: false,
   }),
-  startedAt: z.string().datetime().openapi({
+  startedAt: z.date().openapi({
     description: 'The start date of the subscription.',
     example: '2023-01-01T00:00:00Z',
   }),
-  canceledAt: z.string().datetime().optional().openapi({
+  canceledAt: z.date().nullable().openapi({
     description: 'The date when the subscription was canceled, if applicable.',
     example: '2023-06-01T00:00:00Z',
   }),

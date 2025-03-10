@@ -14,7 +14,7 @@ import {
   NotFoundErrorSchema,
 } from '@/shared/schema'
 import {
-  getStripeCheckoutById,
+  getStripeCheckoutByIdAndWorkspaceId,
   insertStripeCheckout,
 } from '@/data/stripe_checkouts.queries'
 import { z } from 'zod'
@@ -164,7 +164,7 @@ app.openapi(get, async (c) => {
 
   const params = c.req.valid('param')
 
-  const [checkout] = await getStripeCheckoutById.run(
+  const [checkout] = await getStripeCheckoutByIdAndWorkspaceId.run(
     {
       id: params.sessionId,
       workspaceId: auth.orgId,
@@ -185,10 +185,10 @@ app.openapi(get, async (c) => {
   }
 
   const response = Checkout.safeParse({
-    sessionId: checkout.sessionId,
+    sessionId: checkout.session_id,
     status: checkout.status,
-    priceId: checkout.priceId,
-    customerId: checkout.customerId,
+    priceId: checkout.price_id,
+    customerId: checkout.customer_id,
     mode: checkout.mode,
   })
 
@@ -269,8 +269,11 @@ app.openapi(post, async (c) => {
   }
 
   const session = await stripe.checkout.sessions.create({
-    payment_method_types: ['card'],
+    allow_promotion_codes: true,
     billing_address_collection: 'required',
+    cancel_url: body.callbackUrl,
+    customer: customer.id,
+    customer_email: customer.email,
     line_items: [
       {
         price: price.id,
@@ -282,9 +285,8 @@ app.openapi(post, async (c) => {
       },
     ],
     mode: 'subscription',
-    allow_promotion_codes: true,
+    payment_method_types: ['card'],
     success_url: body.callbackUrl,
-    cancel_url: body.callbackUrl,
   })
 
   if (!session) {
