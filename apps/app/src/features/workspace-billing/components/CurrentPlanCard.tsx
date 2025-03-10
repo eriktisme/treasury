@@ -1,4 +1,3 @@
-import { Card, CardContent } from '@internal/design-system/components/ui/card'
 import type { SubscriptionResponse } from '@internal/api-schema/billing'
 import { FreePlanCard } from './FreePlanCard'
 
@@ -11,9 +10,5 @@ export const CurrentPlanCard = (props: Props) => {
     return <FreePlanCard />
   }
 
-  return (
-    <Card>
-      <CardContent className="p-2"></CardContent>
-    </Card>
-  )
+  return <>{/* Placeholder */}</>
 }
