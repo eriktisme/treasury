@@ -11,15 +11,20 @@
     "test": "jest --passWithNoTests",
     "test-coverage": "jest --coverage --passWithNoTests",
     "typeCheck": "tsc --noEmit",
+    "typegen": "pgtyped",
     "watch": "tsc -w"
   },
   "dependencies": {
+    "@aws-sdk/client-eventbridge": "^3.750.0",
     "@clerk/backend": "^1.24.2",
     "@hono/clerk-auth": "^2.0.0",
     "@hono/swagger-ui": "^0.5.0",
     "@hono/zod-openapi": "^0.18.4",
     "@internal/analytics": "workspace:*",
+    "@internal/api-schema": "workspace:*",
+    "@pgtyped/runtime": "^2.4.2",
     "hono": "^4.7.2",
+    "stripe": "^17.7.0",
     "svix": "^1.60.0"
   },
   "devDependencies": {

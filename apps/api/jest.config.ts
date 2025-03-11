@@ -4,7 +4,7 @@ process.env.DATABASE_URL = ''
 
 const config: Config = {
   moduleNameMapper: {
-    '@/data/(.*)': '<rootDir>/src/data/$1',
+    '@/(.*)': '<rootDir>/src/$1',
   },
   roots: ['<rootDir>'],
   testEnvironment: 'node',

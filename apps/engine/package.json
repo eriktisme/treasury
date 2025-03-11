@@ -1,0 +1,29 @@
+{
+  "name": "engine",
+  "version": "0.1.0",
+  "bin": {
+    "app": "bin/app.js"
+  },
+  "scripts": {
+    "build": "tsc --noEmit",
+    "cdk": "cdk",
+    "lint": "eslint '**/*.ts'",
+    "test-coverage": "jest --coverage --passWithNoTests",
+    "test": "jest --passWithNoTests",
+    "typeCheck": "tsc --noEmit",
+    "typegen": "pgtyped",
+    "watch": "tsc -w"
+  },
+  "dependencies": {
+    "@clerk/backend": "^1.24.2",
+    "@internal/analytics": "workspace:*",
+    "@pgtyped/runtime": "^2.4.2",
+    "node-pg-migrate": "^7.6.1",
+    "stripe": "^17.7.0"
+  },
+  "devDependencies": {
+    "@internal/cdk-utils": "workspace:*",
+    "@internal/tsconfig": "workspace:*",
+    "@types/node": "^22"
+  }
+}

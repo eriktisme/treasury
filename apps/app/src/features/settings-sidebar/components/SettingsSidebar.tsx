@@ -16,6 +16,7 @@ import { Protect, useOrganization } from '@clerk/nextjs'
 import {
   BuildingIcon,
   ChevronLeftIcon,
+  CreditCardIcon,
   Settings2Icon,
   UsersIcon,
 } from 'lucide-react'
@@ -38,6 +39,11 @@ const adminRoutes = [
     key: 'members',
     label: 'Members',
     icon: <UsersIcon />,
+  },
+  {
+    key: 'billing',
+    label: 'Billing',
+    icon: <CreditCardIcon />,
   },
 ]
 

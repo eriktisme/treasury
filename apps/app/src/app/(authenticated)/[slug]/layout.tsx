@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react'
 import { auth, clerkClient } from '@clerk/nextjs/server'
 import { notFound } from 'next/navigation'
+import { Providers } from './providers'
 
 const client = await clerkClient()
 
@@ -39,5 +40,5 @@ export default async function Layout(
     notFound()
   }
 
-  return <>{props.children}</>
+  return <Providers>{props.children}</Providers>
 }
