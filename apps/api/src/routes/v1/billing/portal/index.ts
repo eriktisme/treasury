@@ -1,18 +1,25 @@
 import { createRoute, OpenAPIHono } from '@hono/zod-openapi'
 import type { Bindings } from '@/bindings'
-import { Subscription, SubscriptionSchema } from '@internal/api-schema/billing'
 import { getAuth } from '@hono/clerk-auth'
 import { InternalErrorSchema, NotAuthorizedErrorSchema } from '@/shared/schema'
-import { getStripeSubscriptionByWorkspaceId } from '@/data/stripe_subscriptions.queries'
 import { z } from 'zod'
+import { Stripe } from 'stripe'
+import {
+  CreatePortalBodySchema,
+  Portal,
+  PortalSchema,
+} from '@internal/api-schema/billing/portal'
+import { getStripeCustomerByWorkspaceId } from '@/data/stripe_customers.queries'
 import { createPool } from '@vercel/postgres'
 
 const ConfigSchema = z.object({
   databaseUrl: z.string(),
+  stripeSecretKey: z.string(),
 })
 
 const config = ConfigSchema.parse({
   databaseUrl: process.env.DATABASE_URL,
+  stripeSecretKey: process.env.STRIPE_SECRET_KEY,
 })
 
 const pool = createPool({
@@ -20,21 +27,34 @@ const pool = createPool({
   maxUses: 1,
 })
 
+const stripe = new Stripe(config.stripeSecretKey, {
+  apiVersion: '2025-02-24.acacia',
+})
+
 export const app = new OpenAPIHono<{ Bindings: Bindings }>()
 
-const get = createRoute({
-  method: 'get',
+const post = createRoute({
+  method: 'post',
   path: '/',
-  summary: 'Subscription',
+  summary: 'Billing Portal',
+  request: {
+    body: {
+      content: {
+        'application/json': {
+          schema: CreatePortalBodySchema,
+        },
+      },
+    },
+  },
   responses: {
     200: {
       content: {
         'application/json': {
-          schema: SubscriptionSchema,
+          schema: PortalSchema,
         },
       },
       description:
-        "Retrieve the active subscription of the authenticated user's workspace",
+        'Retrieve a short-lived URL that customers can use to manage their subscription.',
     },
     401: {
       content: {
@@ -55,7 +75,7 @@ const get = createRoute({
   },
 })
 
-app.openapi(get, async (c) => {
+app.openapi(post, async (c) => {
   const auth = getAuth(c)
   const lambdaContext = c.env.lambdaContext
 
@@ -71,47 +91,38 @@ app.openapi(get, async (c) => {
     )
   }
 
-  const [subscription] = await getStripeSubscriptionByWorkspaceId.run(
+  const [customer] = await getStripeCustomerByWorkspaceId.run(
     {
       workspaceId: auth.orgId,
     },
     pool
   )
 
-  if (!subscription) {
+  if (!customer) {
     return c.json(
       {
-        data: null,
+        code: 'internal_error',
+        type: 'internal_error',
+        status_code: 500,
+        request_id: lambdaContext.awsRequestId,
       },
-      200
+      500
     )
   }
 
-  const response = Subscription.safeParse({
-    canceledAt: subscription.canceled_at,
-    canceledAtPeriodEnd: subscription.canceled_at_period_end !== null,
-    collectionMethod: 'charge_automatically',
-    currentPeriod: {
-      start: subscription.current_period_start,
-      end: subscription.current_period_end,
-    },
-    seat: {
-      customerId: subscription.customer_id,
-      priceId: subscription.price_id,
-      productId: subscription.product_id,
-      quantity: subscription.quantity,
-    },
-    startedAt: subscription.created_at,
-    status: subscription.status,
-    subscriptionId: subscription.id,
-    trial: {
-      start: subscription.trial_period_start,
-      end: subscription.trial_period_end,
-    },
+  const body = c.req.valid('json')
+
+  const session = await stripe.billingPortal.sessions.create({
+    customer: customer.id,
+    return_url: body.returnUrl,
+  })
+
+  const response = Portal.safeParse({
+    url: session.url,
   })
 
   if (!response.success) {
-    console.error('Failed to parse subscription response', {
+    console.error('Failed to parse portal response', {
       error: response.error,
     })
 

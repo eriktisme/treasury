@@ -46,6 +46,10 @@ export const Subscription = z.object({
         description: 'The unique identifier for the price.',
         example: 'price_1R07gAJxehjHwVZTRxpJtiDK',
       }),
+      customerId: z.string().openapi({
+        description: 'The unique identifier for the customer.',
+        example: 'cus_1R07gAJxehjHwVZTRxpJtiDK',
+      }),
       quantity: z.number().int().openapi({
         description: 'The quantity of seats.',
         example: 5,

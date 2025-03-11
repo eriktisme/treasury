@@ -2,21 +2,21 @@ import { env } from '@/env'
 import type { MutationConfig } from '@/lib/react-query'
 import { useMutation } from '@tanstack/react-query'
 import type {
-  CheckoutResponse,
-  CreateCheckoutBody,
+  CreatePortalBody,
+  PortalResponse,
 } from '@internal/api-schema/billing'
 import { useAuth } from '@clerk/nextjs'
 import type { GetToken } from '@clerk/types'
 
-interface CreateCheckoutOptions {
+interface CreatePortalSessionOptions {
   getToken: GetToken
 }
 
-const createCheckoutSession = async (
-  body: CreateCheckoutBody,
-  options: CreateCheckoutOptions
-): Promise<CheckoutResponse> => {
-  const response = await fetch(`${env.NEXT_PUBLIC_API_URL}/billing/checkouts`, {
+const createPortalSession = async (
+  body: CreatePortalBody,
+  options: CreatePortalSessionOptions
+): Promise<PortalResponse> => {
+  const response = await fetch(`${env.NEXT_PUBLIC_API_URL}/billing/portal`, {
     credentials: 'include',
     headers: {
       Accept: 'application/json',
@@ -31,10 +31,10 @@ const createCheckoutSession = async (
 }
 
 type Options = {
-  mutationConfig?: MutationConfig<typeof createCheckoutSession>
+  mutationConfig?: MutationConfig<typeof createPortalSession>
 }
 
-export const useCreateCheckoutSession = ({ mutationConfig }: Options) => {
+export const useCreatePortalSession = ({ mutationConfig }: Options) => {
   const { onSuccess, ...restConfig } = mutationConfig ?? {}
 
   const { getToken } = useAuth()
@@ -44,7 +44,7 @@ export const useCreateCheckoutSession = ({ mutationConfig }: Options) => {
       onSuccess?.(...args)
     },
     ...restConfig,
-    mutationFn: async (body: CreateCheckoutBody) =>
-      createCheckoutSession(body, { getToken }),
+    mutationFn: async (body: CreatePortalBody) =>
+      createPortalSession(body, { getToken }),
   })
 }
