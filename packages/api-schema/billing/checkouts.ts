@@ -1,12 +1,5 @@
 import { z } from '@hono/zod-openapi'
 
-export const GetCheckoutParamsSchema = z.object({
-  sessionId: z.string().openapi({
-    description: 'A unique identifier for the checkout session.',
-    example: '123e4567-e89b-12d3-a456-426614174001',
-  }),
-})
-
 export const Checkout = z.object({
   sessionId: z.string().openapi({
     description: 'The unique identifier for the checkout.',
