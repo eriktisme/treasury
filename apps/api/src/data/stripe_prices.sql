@@ -26,6 +26,12 @@ DELETE FROM stripe_prices WHERE id = :id!;
 SELECT * FROM stripe_prices WHERE id = :id!;
 
 /*
+ @name GetStripePriceByProductIds
+ @param productIds -> (...)
+*/
+SELECT * FROM stripe_prices WHERE product_id IN :productIds!;
+
+/*
  @name GetStripePriceByLookupKey
 */
 SELECT * FROM stripe_prices WHERE lookup_key = :key!;
