@@ -87,10 +87,12 @@ export const Subscription = z.object({
   }),
 })
 
-export const SubscriptionSchema = z
-  .object({
-    data: z.union([Subscription, z.null()]),
-  })
-  .openapi('SubscriptionSchema')
+export type Subscription = z.infer<typeof Subscription>
 
-export type SubscriptionResponse = z.infer<typeof SubscriptionSchema>
+export const SubscriptionsSchema = z
+  .object({
+    data: z.array(Subscription),
+  })
+  .openapi('SubscriptionsSchema')
+
+export type SubscriptionsResponse = z.infer<typeof SubscriptionsSchema>

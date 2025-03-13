@@ -203,13 +203,13 @@ export const getStripeSubscriptionById = new PreparedQuery<
   IGetStripeSubscriptionByIdResult
 >(getStripeSubscriptionByIdIR)
 
-/** 'GetStripeSubscriptionByWorkspaceId' parameters type */
-export interface IGetStripeSubscriptionByWorkspaceIdParams {
+/** 'GetStripeSubscriptionsByWorkspaceId' parameters type */
+export interface IGetStripeSubscriptionsByWorkspaceIdParams {
   workspaceId: string
 }
 
-/** 'GetStripeSubscriptionByWorkspaceId' return type */
-export interface IGetStripeSubscriptionByWorkspaceIdResult {
+/** 'GetStripeSubscriptionsByWorkspaceId' return type */
+export interface IGetStripeSubscriptionsByWorkspaceIdResult {
   canceled_at: Date | null
   canceled_at_period_end: Date | null
   created_at: Date
@@ -227,13 +227,13 @@ export interface IGetStripeSubscriptionByWorkspaceIdResult {
   workspace_id: string
 }
 
-/** 'GetStripeSubscriptionByWorkspaceId' query type */
-export interface IGetStripeSubscriptionByWorkspaceIdQuery {
-  params: IGetStripeSubscriptionByWorkspaceIdParams
-  result: IGetStripeSubscriptionByWorkspaceIdResult
+/** 'GetStripeSubscriptionsByWorkspaceId' query type */
+export interface IGetStripeSubscriptionsByWorkspaceIdQuery {
+  params: IGetStripeSubscriptionsByWorkspaceIdParams
+  result: IGetStripeSubscriptionsByWorkspaceIdResult
 }
 
-const getStripeSubscriptionByWorkspaceIdIR: any = {
+const getStripeSubscriptionsByWorkspaceIdIR: any = {
   usedParamSet: { workspaceId: true },
   params: [
     {
@@ -244,7 +244,7 @@ const getStripeSubscriptionByWorkspaceIdIR: any = {
     },
   ],
   statement:
-    'SELECT\n  s.*,\n  product.id as product_id\nFROM stripe_subscriptions s\nJOIN stripe_prices price ON s.price_id = price.id\nJOIN stripe_products product ON price.product_id = product.id\nWHERE s.workspace_id = :workspaceId!',
+    'SELECT\n  s.*,\n  product.id as product_id\nFROM stripe_subscriptions s\nJOIN stripe_prices price ON s.price_id = price.id\nJOIN stripe_products product ON price.product_id = product.id\nWHERE s.workspace_id = :workspaceId!\nAND s.current_period_end <= NOW()',
 }
 
 /**
@@ -257,9 +257,10 @@ const getStripeSubscriptionByWorkspaceIdIR: any = {
  * JOIN stripe_prices price ON s.price_id = price.id
  * JOIN stripe_products product ON price.product_id = product.id
  * WHERE s.workspace_id = :workspaceId!
+ * AND s.current_period_end <= NOW()
  * ```
  */
-export const getStripeSubscriptionByWorkspaceId = new PreparedQuery<
-  IGetStripeSubscriptionByWorkspaceIdParams,
-  IGetStripeSubscriptionByWorkspaceIdResult
->(getStripeSubscriptionByWorkspaceIdIR)
+export const getStripeSubscriptionsByWorkspaceId = new PreparedQuery<
+  IGetStripeSubscriptionsByWorkspaceIdParams,
+  IGetStripeSubscriptionsByWorkspaceIdResult
+>(getStripeSubscriptionsByWorkspaceIdIR)

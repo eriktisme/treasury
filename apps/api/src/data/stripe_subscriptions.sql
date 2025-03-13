@@ -29,7 +29,7 @@ DELETE FROM stripe_subscriptions WHERE id = :id!;
 SELECT * FROM stripe_subscriptions WHERE id = :id!;
 
 /*
- @name GetStripeSubscriptionByWorkspaceId
+ @name GetStripeSubscriptionsByWorkspaceId
 */
 SELECT
   s.*,
@@ -37,4 +37,5 @@ SELECT
 FROM stripe_subscriptions s
 JOIN stripe_prices price ON s.price_id = price.id
 JOIN stripe_products product ON price.product_id = product.id
-WHERE s.workspace_id = :workspaceId!;
+WHERE s.workspace_id = :workspaceId!
+AND s.current_period_end <= NOW();
