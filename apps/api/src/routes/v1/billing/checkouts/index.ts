@@ -159,7 +159,6 @@ app.openapi(post, async (c) => {
     billing_address_collection: 'required',
     cancel_url: body.callbackUrl,
     customer: customer.id,
-    customer_email: customer.email,
     line_items: [
       {
         price: price.id,

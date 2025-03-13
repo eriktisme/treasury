@@ -3,7 +3,7 @@ import { useCreatePortalSession } from '../api'
 import { env } from '@/env'
 import { usePathname } from 'next/navigation'
 
-export const ManagerPlanButton = () => {
+export const ManageSubscriptionButton = () => {
   const pathname = usePathname()
 
   const createPortalSession = useCreatePortalSession({
@@ -24,7 +24,7 @@ export const ManagerPlanButton = () => {
       }}
       variant="default"
     >
-      Manage plan
+      Manage subscription
     </Button>
   )
 }

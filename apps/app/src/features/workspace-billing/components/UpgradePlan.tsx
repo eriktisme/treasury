@@ -6,8 +6,13 @@ import { useOrganization } from '@clerk/nextjs'
 import { usePathname } from 'next/navigation'
 import { env } from '@/env'
 import { loadStripe } from '@stripe/stripe-js'
+import type { ProductsResponse } from '@internal/api-schema/billing'
 
-export const UpgradePlan = () => {
+interface Props {
+  price?: ProductsResponse['data'][0]['prices'][0]
+}
+
+export const UpgradePlan = (props: Props) => {
   const { organization } = useOrganization()
 
   const pathname = usePathname()
@@ -31,7 +36,7 @@ export const UpgradePlan = () => {
         createCheckoutSession.mutate({
           callbackUrl: `https://${env.NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL}/${pathname}`,
           quantity: organization?.membersCount ?? 1,
-          lookupKey: 'basic_monthly',
+          lookupKey: props.price?.lookupKey ?? 'basic_monthly',
         })
       }}
     >
