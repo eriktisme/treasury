@@ -37,12 +37,12 @@ CREATE TABLE stripe_subscriptions (
     id VARCHAR(255) PRIMARY KEY,
     customer_id VARCHAR(255) NOT NULL REFERENCES stripe_customers ON DELETE CASCADE,
     price_id VARCHAR(255) NOT NULL REFERENCES stripe_prices ON DELETE CASCADE,
-    current_period_start DATE NOT NULL,
-    current_period_end DATE NOT NULL,
-    trial_period_start DATE,
-    trial_period_end DATE,
-    canceled_at DATE,
-    canceled_at_period_end DATE,
+    current_period_start TIMESTAMP WITH TIME ZONE NOT NULL,
+    current_period_end TIMESTAMP WITH TIME ZONE NOT NULL,
+    trial_period_start TIMESTAMP WITH TIME ZONE,
+    trial_period_end TIMESTAMP WITH TIME ZONE,
+    canceled_at TIMESTAMP WITH TIME ZONE,
+    canceled_at_period_end TIMESTAMP WITH TIME ZONE,
     status VARCHAR,
     quantity int,
     metadata JSON,
@@ -64,6 +64,9 @@ ADD COLUMN tax_id VARCHAR(255);
 
 ALTER TABLE stripe_checkouts
 ADD COLUMN "mode" VARCHAR(255) NOT NULL;
+
+ALTER TABLE stripe_subscriptions
+DROP CONSTRAINT stripe_subscriptions_workspace_id_key;
 
 -- Down Migration
 DROP TABLE stripe_products;
