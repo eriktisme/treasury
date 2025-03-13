@@ -5,7 +5,7 @@ import {
   CardContent,
   CardFooter,
 } from '@internal/design-system/components/ui/card'
-import { ManagerPlanButton } from './ManagerPlanButton'
+import { ManageSubscriptionButton } from './ManageSubscriptionButton'
 
 interface Props {
   subscription?: SubscriptionResponse['data']
@@ -20,7 +20,7 @@ export const CurrentPlanCard = (props: Props) => {
     <Card>
       <CardContent className="p-4"></CardContent>
       <CardFooter>
-        <ManagerPlanButton />
+        <ManageSubscriptionButton />
       </CardFooter>
     </Card>
   )

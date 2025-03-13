@@ -102,6 +102,7 @@ app.openapi(get, async (c) => {
             interval: price.recurring_interval,
             intervalCount: price.recurring_count,
           },
+          lookupKey: price.lookup_key,
         })
       })
 

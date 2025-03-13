@@ -25,6 +25,13 @@ export const Price = z.object({
       example: 1,
     }),
   }),
+  lookupKey: z
+    .string()
+    .nullable()
+    .openapi({
+      description: 'The lookup key of the price.',
+      examples: ['basic_monthly', 'basic_yearly'],
+    }),
 })
 
 export type Price = z.infer<typeof Price>
