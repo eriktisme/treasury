@@ -244,7 +244,7 @@ const getStripeSubscriptionsByWorkspaceIdIR: any = {
     },
   ],
   statement:
-    'SELECT\n  s.*,\n  product.id as product_id\nFROM stripe_subscriptions s\nJOIN stripe_prices price ON s.price_id = price.id\nJOIN stripe_products product ON price.product_id = product.id\nWHERE s.workspace_id = :workspaceId!\nAND s.current_period_end <= NOW()',
+    'SELECT\n  s.*,\n  product.id as product_id\nFROM stripe_subscriptions s\nJOIN stripe_prices price ON s.price_id = price.id\nJOIN stripe_products product ON price.product_id = product.id\nWHERE s.workspace_id = :workspaceId!',
 }
 
 /**
@@ -257,7 +257,6 @@ const getStripeSubscriptionsByWorkspaceIdIR: any = {
  * JOIN stripe_prices price ON s.price_id = price.id
  * JOIN stripe_products product ON price.product_id = product.id
  * WHERE s.workspace_id = :workspaceId!
- * AND s.current_period_end <= NOW()
  * ```
  */
 export const getStripeSubscriptionsByWorkspaceId = new PreparedQuery<

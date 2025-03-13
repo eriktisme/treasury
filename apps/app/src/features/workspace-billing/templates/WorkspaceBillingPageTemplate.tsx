@@ -7,7 +7,7 @@ import { useQuery } from '@tanstack/react-query'
 import { queryConfig } from '@/lib/react-query'
 import { Button } from '@internal/design-system/components/ui/button'
 import { ArrowRightIcon } from 'lucide-react'
-import type { SubscriptionResponse } from '@internal/api-schema/billing'
+import type { SubscriptionsResponse } from '@internal/api-schema/billing'
 import { useAuth, useOrganization } from '@clerk/nextjs'
 
 export const WorkspaceBillingPageTemplate = () => {
@@ -15,7 +15,7 @@ export const WorkspaceBillingPageTemplate = () => {
 
   const { organization } = useOrganization()
 
-  const { data, isLoading } = useQuery<SubscriptionResponse>({
+  const { data, isLoading } = useQuery<SubscriptionsResponse>({
     ...getSubscriptionOptions({
       getToken,
     }),

@@ -1,4 +1,4 @@
-import type { SubscriptionResponse } from '@internal/api-schema/billing'
+import type { SubscriptionsResponse } from '@internal/api-schema/billing'
 import { FreePlanCard } from './FreePlanCard'
 import {
   Card,
@@ -8,7 +8,7 @@ import {
 import { ManageSubscriptionButton } from './ManageSubscriptionButton'
 
 interface Props {
-  subscription?: SubscriptionResponse['data']
+  subscription?: SubscriptionsResponse['data']
 }
 
 export const CurrentPlanCard = (props: Props) => {
