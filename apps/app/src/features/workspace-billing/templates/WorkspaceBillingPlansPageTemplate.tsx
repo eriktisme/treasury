@@ -8,10 +8,7 @@ import { Button } from '@internal/design-system/components/ui/button'
 import { ArrowLeftIcon, ArrowUpRightIcon } from 'lucide-react'
 import { useAuth, useOrganization } from '@clerk/nextjs'
 import { useMemo, useState } from 'react'
-import {
-  FreePricingCard,
-  PricingCard,
-} from '@/features/workspace-billing/components'
+import { FreePricingCard, PricingCard } from '../components'
 import { Switch } from '@internal/design-system/components/ui/switch'
 import { Label } from '@internal/design-system/components/ui/label'
 
@@ -43,9 +40,10 @@ export const WorkspaceBillingPlansPageTemplate = () => {
       return null
     }
 
-    const currentProduct = productsQuery.data?.data?.find(
-      (product) =>
-        product.productId === subscriptionQuery.data?.data?.seat.productId
+    const currentProduct = productsQuery.data?.data?.find((product) =>
+      subscriptionQuery.data?.data?.some(
+        (subscription) => subscription.seat.productId === product.productId
+      )
     )
 
     if (!currentProduct) {
@@ -111,13 +109,13 @@ export const WorkspaceBillingPlansPageTemplate = () => {
             <Label htmlFor="billing-period">Billed annually</Label>
           </div>
         </div>
-        <div className="flex w-full flex-shrink-0 flex-grow basis-auto flex-col items-center gap-6 lg:grid lg:auto-rows-min lg:grid-cols-4 lg:overflow-x-auto">
-          <FreePricingCard subscription={subscriptionQuery.data?.data} />
+        <div className="grid grid-cols-1 gap-6 overflow-x-auto md:grid-cols-4">
+          <FreePricingCard subscriptions={subscriptionQuery.data?.data} />
           {productsQuery.data?.data.map((product) => (
             <PricingCard
               key={`pricing-card-${product.productId}`}
               product={product}
-              subscription={subscriptionQuery.data?.data}
+              subscriptions={subscriptionQuery.data?.data}
               interval={interval}
             />
           ))}

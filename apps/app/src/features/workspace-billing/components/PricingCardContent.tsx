@@ -6,6 +6,10 @@ interface Props {
 }
 
 export const PricingCardContent = (props: Props) => {
+  if (props.features.length === 0) {
+    return null
+  }
+
   return (
     <CardContent>
       {props.features.map((feature) => (

@@ -6,12 +6,11 @@ import {
 } from '@internal/design-system/components/ui/card'
 import type {
   ProductsResponse,
-  SubscriptionResponse,
+  SubscriptionsResponse,
 } from '@internal/api-schema/billing'
 import { PricingCardContent } from './PricingCardContent'
-import { Button } from '@internal/design-system/components/ui/button'
 import { useMemo } from 'react'
-import { UpgradePlan } from './UpgradePlan'
+import { PricingCardButton } from './PricingCardButton'
 
 const formatter = new Intl.NumberFormat('en-US', {
   maximumFractionDigits: 2,
@@ -20,7 +19,7 @@ const formatter = new Intl.NumberFormat('en-US', {
 interface Props {
   interval: 'month' | 'year'
   product: ProductsResponse['data'][0]
-  subscription?: SubscriptionResponse['data']
+  subscriptions?: SubscriptionsResponse['data']
 }
 
 export const PricingCard = (props: Props) => {
@@ -48,14 +47,11 @@ export const PricingCard = (props: Props) => {
     return price.unit.amount
   }, [price?.unit.amount, props.interval])
 
-  const isCurrentProduct =
-    props.subscription?.seat?.productId === props.product.productId
-
   const hasPrice = props.product.prices.length > 0
 
   return (
-    <Card className="w-full">
-      <CardHeader>
+    <Card className="flex flex-col items-stretch">
+      <CardHeader className="flex-grow">
         <CardDescription className="text-lg font-semibold">
           {props.product.name}
         </CardDescription>
@@ -78,14 +74,7 @@ export const PricingCard = (props: Props) => {
             </div>
           )}
         </div>
-        {!hasPrice ? <Button variant="secondary">Talk to sales</Button> : null}
-        {isCurrentProduct ? (
-          <Button variant="secondary" disabled>
-            Current plan
-          </Button>
-        ) : hasPrice ? (
-          <UpgradePlan price={price} />
-        ) : null}
+        <PricingCardButton {...props} />
       </CardHeader>
       <PricingCardContent features={[]} />
     </Card>
