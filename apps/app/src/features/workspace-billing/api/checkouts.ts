@@ -6,32 +6,11 @@ import type {
   CreateCheckoutBody,
 } from '@internal/api-schema/billing'
 import { useAuth } from '@clerk/nextjs'
-import type { GetToken } from '@clerk/types'
-
-interface CreateCheckoutOptions {
-  getToken: GetToken
-}
-
-const createCheckoutSession = async (
-  body: CreateCheckoutBody,
-  options: CreateCheckoutOptions
-): Promise<CheckoutResponse> => {
-  const response = await fetch(`${env.NEXT_PUBLIC_API_URL}/billing/checkouts`, {
-    credentials: 'include',
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${await options.getToken()}`,
-    },
-    method: 'POST',
-    body: JSON.stringify(body),
-  })
-
-  return response.json()
-}
 
 type Options = {
-  mutationConfig?: MutationConfig<typeof createCheckoutSession>
+  mutationConfig?: MutationConfig<
+    (body: CreateCheckoutBody) => Promise<CheckoutResponse>
+  >
 }
 
 export const useCreateCheckoutSession = ({ mutationConfig }: Options) => {
@@ -45,6 +24,15 @@ export const useCreateCheckoutSession = ({ mutationConfig }: Options) => {
     },
     ...restConfig,
     mutationFn: async (body: CreateCheckoutBody) =>
-      createCheckoutSession(body, { getToken }),
+      fetch(`${env.NEXT_PUBLIC_API_URL}/billing/checkouts`, {
+        credentials: 'include',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${await getToken()}`,
+        },
+        method: 'POST',
+        body: JSON.stringify(body),
+      }).then((res) => res.json()),
   })
 }

@@ -180,6 +180,55 @@ export const getStripePriceById = new PreparedQuery<
   IGetStripePriceByIdResult
 >(getStripePriceByIdIR)
 
+/** 'GetStripePriceByProductIds' parameters type */
+export interface IGetStripePriceByProductIdsParams {
+  productIds: readonly string[]
+}
+
+/** 'GetStripePriceByProductIds' return type */
+export interface IGetStripePriceByProductIdsResult {
+  active: boolean
+  created_at: Date
+  currency: string | null
+  id: string
+  lookup_key: string | null
+  metadata: Json | null
+  product_id: string
+  recurring_count: number | null
+  recurring_interval: string | null
+  unit_amount: number | null
+}
+
+/** 'GetStripePriceByProductIds' query type */
+export interface IGetStripePriceByProductIdsQuery {
+  params: IGetStripePriceByProductIdsParams
+  result: IGetStripePriceByProductIdsResult
+}
+
+const getStripePriceByProductIdsIR: any = {
+  usedParamSet: { productIds: true },
+  params: [
+    {
+      name: 'productIds',
+      required: true,
+      transform: { type: 'array_spread' },
+      locs: [{ a: 48, b: 59 }],
+    },
+  ],
+  statement: 'SELECT * FROM stripe_prices WHERE product_id IN :productIds!',
+}
+
+/**
+ * Query generated from SQL:
+ * ```
+ * SELECT * FROM stripe_prices WHERE product_id IN :productIds!
+ * ```
+ */
+export const getStripePriceByProductIds = new PreparedQuery<
+  IGetStripePriceByProductIdsParams,
+  IGetStripePriceByProductIdsResult
+>(getStripePriceByProductIdsIR)
+
 /** 'GetStripePriceByLookupKey' parameters type */
 export interface IGetStripePriceByLookupKeyParams {
   key: string
