@@ -105,10 +105,10 @@ app.openapi(get, async (c) => {
       startedAt: subscription.created_at,
       status: subscription.status,
       subscriptionId: subscription.id,
-      trial: {
+      trial: subscription.trial_period_end !== null ? {
         start: subscription.trial_period_start,
         end: subscription.trial_period_end,
-      },
+      } : null,
     })
   )
 

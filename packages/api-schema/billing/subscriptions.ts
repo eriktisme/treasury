@@ -60,15 +60,16 @@ export const Subscription = z.object({
     }),
   trial: z
     .object({
-      start: z.date().nullable().openapi({
+      start: z.date().openapi({
         description: 'The start date of the trial period.',
         example: '2023-01-01T00:00:00Z',
       }),
-      end: z.date().nullable().openapi({
+      end: z.date().openapi({
         description: 'The end date of the trial period.',
         example: '2023-01-31T23:59:59Z',
       }),
     })
+    .nullable()
     .openapi({
       description: 'The trial period for the subscription, if applicable.',
     }),

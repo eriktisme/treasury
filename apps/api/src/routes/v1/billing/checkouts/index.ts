@@ -40,6 +40,8 @@ const stripe = new Stripe(config.stripeSecretKey, {
 
 export const app = new OpenAPIHono<{ Bindings: Bindings }>()
 
+const DEFAULT_TRIAL_PERIOD = 14
+
 const post = createRoute({
   method: 'post',
   path: '/',
@@ -156,7 +158,7 @@ app.openapi(post, async (c) => {
 
   const session = await stripe.checkout.sessions.create({
     allow_promotion_codes: true,
-    billing_address_collection: 'required',
+    billing_address_collection: 'auto',
     cancel_url: body.callbackUrl,
     customer: customer.id,
     line_items: [
@@ -171,7 +173,16 @@ app.openapi(post, async (c) => {
     ],
     mode: 'subscription',
     payment_method_types: ['card'],
+    subscription_data: {
+      trial_period_days: body.trial ? DEFAULT_TRIAL_PERIOD : undefined,
+      trial_settings: {
+        end_behavior: {
+          missing_payment_method: 'cancel',
+        },
+      },
+    },
     success_url: body.callbackUrl,
+    payment_method_collection: 'if_required',
   })
 
   if (!session) {
