@@ -3,7 +3,7 @@ import { useCreatePortalSession } from '../api'
 import { env } from '@/env'
 import { usePathname } from 'next/navigation'
 
-export const ManageSubscriptionButton = () => {
+export const ManageSubscription = () => {
   const pathname = usePathname()
 
   const createPortalSession = useCreatePortalSession({

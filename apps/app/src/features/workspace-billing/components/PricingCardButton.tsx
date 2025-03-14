@@ -69,7 +69,7 @@ export const PricingCardButton = (props: Props) => {
     <div className="flex w-full flex-col gap-3">
       <UpgradePlan price={price} />
       {!hasTrialedProductBefore && !isCurrentProduct ? (
-        <FreeTrialPlan price={price} />
+        <FreeTrialPlan product={props.product} price={price} />
       ) : null}
     </div>
   )

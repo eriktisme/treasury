@@ -8,7 +8,11 @@ import { Badge } from '@internal/design-system/components/ui/badge'
 import { useOrganization } from '@clerk/nextjs'
 import { UpgradePlan } from './UpgradePlan'
 
-export const FreePlanCard = () => {
+interface Props {
+  showUpgrade?: boolean
+}
+
+export const FreePlanCard = (props: Props) => {
   const { organization } = useOrganization()
 
   return (
@@ -28,20 +32,22 @@ export const FreePlanCard = () => {
           </div>
         </CardContent>
       </Card>
-      <Card>
-        <CardContent className="flex flex-row gap-2 p-4">
-          <div>
-            <CardTitle className="mb-2 flex items-center space-x-1.5">
-              <span>Basic</span>
-            </CardTitle>
-            <CardDescription className="mb-4">
-              &euro;10 per user/mo
-            </CardDescription>
-            <UpgradePlan />
-          </div>
-          <div>{/* Placeholder perks */}</div>
-        </CardContent>
-      </Card>
+      {props.showUpgrade ? (
+        <Card>
+          <CardContent className="flex flex-row gap-2 p-4">
+            <div>
+              <CardTitle className="mb-2 flex items-center space-x-1.5">
+                <span>Basic</span>
+              </CardTitle>
+              <CardDescription className="mb-4">
+                &euro;10 per user/month
+              </CardDescription>
+              <UpgradePlan />
+            </div>
+            <div>{/* Placeholder perks */}</div>
+          </CardContent>
+        </Card>
+      ) : null}
     </div>
   )
 }

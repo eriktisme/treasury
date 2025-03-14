@@ -19,8 +19,8 @@ export const FreePricingCard = (props: Props) => {
       return false
     }
 
-    return props.subscriptions.some(
-      (subscription) => subscription.status === 'active'
+    return props.subscriptions.some((subscription) =>
+      ['active', 'trialing'].includes(subscription.status)
     )
   }, [props.subscriptions])
 

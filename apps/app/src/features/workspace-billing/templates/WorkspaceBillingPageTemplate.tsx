@@ -2,12 +2,11 @@
 
 import Link from 'next/link'
 import { CurrentPlanCard } from '../components'
-import { getSubscriptionOptions } from '../api'
-import { useQuery } from '@tanstack/react-query'
+import { getProductOptions, getSubscriptionOptions } from '../api'
+import { useQueries } from '@tanstack/react-query'
 import { queryConfig } from '@/lib/react-query'
 import { Button } from '@internal/design-system/components/ui/button'
 import { ArrowRightIcon } from 'lucide-react'
-import type { SubscriptionsResponse } from '@internal/api-schema/billing'
 import { useAuth, useOrganization } from '@clerk/nextjs'
 
 export const WorkspaceBillingPageTemplate = () => {
@@ -15,14 +14,24 @@ export const WorkspaceBillingPageTemplate = () => {
 
   const { organization } = useOrganization()
 
-  const { data, isLoading } = useQuery<SubscriptionsResponse>({
-    ...getSubscriptionOptions({
-      getToken,
-    }),
-    ...queryConfig,
+  const [subscriptionQuery, productsQuery] = useQueries({
+    queries: [
+      {
+        ...getSubscriptionOptions({
+          getToken,
+        }),
+        ...queryConfig,
+      },
+      {
+        ...getProductOptions({
+          getToken,
+        }),
+        ...queryConfig,
+      },
+    ],
   })
 
-  if (isLoading) {
+  if (subscriptionQuery.isLoading || productsQuery.isLoading) {
     return null
   }
 
@@ -53,7 +62,10 @@ export const WorkspaceBillingPageTemplate = () => {
           </Button>
         </Link>
       </div>
-      <CurrentPlanCard subscription={data?.data} />
+      <CurrentPlanCard
+        subscriptions={subscriptionQuery.data?.data}
+        products={productsQuery.data?.data}
+      />
     </div>
   )
 }

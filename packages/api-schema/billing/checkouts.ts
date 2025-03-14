@@ -46,6 +46,10 @@ export const CreateCheckoutBodySchema = z.object({
     description: 'The URL to redirect to after the checkout is complete.',
     example: 'https://example.com/checkout/success',
   }),
+  trial: z.boolean().default(false).openapi({
+    description: 'Whether to start a trial period.',
+    examples: [false, true],
+  }),
 })
 
 export type CreateCheckoutBody = z.infer<typeof CreateCheckoutBodySchema>
