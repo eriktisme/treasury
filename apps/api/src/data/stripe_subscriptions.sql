@@ -38,3 +38,16 @@ FROM stripe_subscriptions s
 JOIN stripe_prices price ON s.price_id = price.id
 JOIN stripe_products product ON price.product_id = product.id
 WHERE s.workspace_id = :workspaceId!;
+
+/*
+ @name GetCurrentStripeSubscriptionsByWorkspaceId
+*/
+SELECT
+  s.*,
+  product.id as product_id
+FROM stripe_subscriptions s
+JOIN stripe_prices price ON s.price_id = price.id
+JOIN stripe_products product ON price.product_id = product.id
+WHERE s.workspace_id = :workspaceId!
+ORDER BY s.current_period_start ASC
+LIMIT 1;
