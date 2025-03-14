@@ -15,7 +15,7 @@ import { Badge } from '@internal/design-system/components/ui/badge'
 import { useMemo } from 'react'
 
 const formatDate = (date: Date) => {
-  return new Date().toISOString().split('T')[0]
+  return date.toISOString().split('T')[0]
 }
 
 const formatter = new Intl.NumberFormat('en-US', {
@@ -45,8 +45,6 @@ export const CurrentPlanCard = (props: Props) => {
     if (!currentSubscription) {
       return null
     }
-
-    console.log(props.products, currentSubscription)
 
     return props.products?.find(
       (product) => product.productId === currentSubscription.seat.productId

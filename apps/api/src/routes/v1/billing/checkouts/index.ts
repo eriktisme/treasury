@@ -152,7 +152,7 @@ app.openapi(post, async (c) => {
         status_code: 400,
         request_id: lambdaContext.awsRequestId,
       },
-      404
+      400
     )
   }
 

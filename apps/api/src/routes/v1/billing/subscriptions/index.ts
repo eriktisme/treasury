@@ -3,7 +3,7 @@ import type { Bindings } from '@/bindings'
 import { Subscription, SubscriptionsSchema } from '@internal/api-schema/billing'
 import { getAuth } from '@hono/clerk-auth'
 import { InternalErrorSchema, NotAuthorizedErrorSchema } from '@/shared/schema'
-import { getStripeSubscriptionsByWorkspaceId } from '@/data/stripe_subscriptions.queries'
+import { getCurrentStripeSubscriptionsByWorkspaceId } from '@/data/stripe_subscriptions.queries'
 import { z } from 'zod'
 import { createPool } from '@vercel/postgres'
 
@@ -71,7 +71,7 @@ app.openapi(get, async (c) => {
     )
   }
 
-  const subscriptions = await getStripeSubscriptionsByWorkspaceId.run(
+  const subscriptions = await getCurrentStripeSubscriptionsByWorkspaceId.run(
     {
       workspaceId: auth.orgId,
     },
@@ -105,10 +105,13 @@ app.openapi(get, async (c) => {
       startedAt: subscription.created_at,
       status: subscription.status,
       subscriptionId: subscription.id,
-      trial: subscription.trial_period_end !== null ? {
-        start: subscription.trial_period_start,
-        end: subscription.trial_period_end,
-      } : null,
+      trial:
+        subscription.trial_period_end !== null
+          ? {
+              start: subscription.trial_period_start,
+              end: subscription.trial_period_end,
+            }
+          : null,
     })
   )
 
