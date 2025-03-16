@@ -175,11 +175,11 @@ app.openapi(post, async (c) => {
     payment_method_types: ['card'],
     subscription_data: {
       trial_period_days: body.trial ? DEFAULT_TRIAL_PERIOD : undefined,
-      trial_settings: {
+      trial_settings: body.trial ? {
         end_behavior: {
           missing_payment_method: 'cancel',
         },
-      },
+      } : undefined,
     },
     success_url: body.callbackUrl,
     payment_method_collection: 'if_required',

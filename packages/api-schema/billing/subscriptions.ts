@@ -1,5 +1,25 @@
 import { z } from '@hono/zod-openapi'
 
+export const CreateSubscriptionBody = z.object({
+  lookupKey: z.string().openapi({
+    description: 'The unique lookup key for the price.',
+    examples: ['basic_monthly', 'basic_yearly'],
+  }),
+  quantity: z.number().int().openapi({
+    description: 'The quantity of seats.',
+    example: 5,
+  }),
+  trial: z
+    .boolean()
+    .default(false)
+    .openapi({
+      description: 'Whether to start a trial period.',
+      examples: [false, true],
+    }),
+})
+
+export type CreateSubscriptionBody = z.infer<typeof CreateSubscriptionBody>
+
 export const Subscription = z.object({
   subscriptionId: z.string().openapi({
     description: 'The unique identifier for the workspace subscription.',
