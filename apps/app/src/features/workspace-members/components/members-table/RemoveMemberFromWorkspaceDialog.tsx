@@ -50,7 +50,6 @@ export const RemoveMemberFromWorkspace = (props: Props) => {
               await props.onWorkspaceMemberRemoved?.()
             }}
             variant="destructive"
-            className="w-full"
           >
             Remove member
           </Button>

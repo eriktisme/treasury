@@ -8,8 +8,10 @@ import type { SubscriptionsResponse } from '@internal/api-schema/billing'
 import { Button } from '@internal/design-system/components/ui/button'
 import { PricingCardContent } from './PricingCardContent'
 import { useMemo } from 'react'
+import { DowngradePlan } from './DowngradePlan'
 
 interface Props {
+  interval: 'month' | 'year'
   subscriptions?: SubscriptionsResponse['data']
 }
 
@@ -20,7 +22,7 @@ export const FreePricingCard = (props: Props) => {
     }
 
     return props.subscriptions.some((subscription) =>
-      ['active', 'trialing'].includes(subscription.status)
+      ['active'].includes(subscription.status)
     )
   }, [props.subscriptions])
 
@@ -37,7 +39,9 @@ export const FreePricingCard = (props: Props) => {
           </div>
         </div>
         {hasActiveSubscription ? (
-          <Button variant="secondary">Downgrade to Free</Button>
+          <DowngradePlan
+            lookupKey={`free_${props.interval === 'year' ? 'yearly' : 'monthly'}`}
+          />
         ) : (
           <Button variant="secondary" disabled>
             Current plan

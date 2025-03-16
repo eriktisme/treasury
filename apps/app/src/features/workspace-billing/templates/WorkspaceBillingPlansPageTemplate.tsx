@@ -12,6 +12,12 @@ import { FreePricingCard, PricingCard } from '../components'
 import { Switch } from '@internal/design-system/components/ui/switch'
 import { Label } from '@internal/design-system/components/ui/label'
 
+/**
+ * Canceled is a special status,
+ * when a subscription is canceled we have to check the canceledAt date
+ */
+const ACTIVE_SUBSCRIPTION_STATUSES = ['active', 'trialing', 'canceled']
+
 export const WorkspaceBillingPlansPageTemplate = () => {
   const { getToken } = useAuth()
   const { organization } = useOrganization()
@@ -35,23 +41,51 @@ export const WorkspaceBillingPlansPageTemplate = () => {
     ],
   })
 
-  const currentPlanName = useMemo(() => {
+  const currentProduct = useMemo(() => {
     if (subscriptionQuery.isLoading || productsQuery.isLoading) {
       return null
     }
 
-    const currentProduct = productsQuery.data?.data?.find((product) =>
+    return productsQuery.data?.data?.find((product) =>
       subscriptionQuery.data?.data?.some(
         (subscription) => subscription.seat.productId === product.productId
       )
     )
+  }, [productsQuery, subscriptionQuery])
 
+  const currentSubscription = useMemo(() => {
+    if (subscriptionQuery.isLoading) {
+      return null
+    }
+
+    return (
+      subscriptionQuery.data?.data?.find((subscription) => {
+        return (
+          new Date(subscription.currentPeriod.start) <= new Date() &&
+          new Date(subscription.currentPeriod.end) >= new Date() &&
+          ACTIVE_SUBSCRIPTION_STATUSES.includes(subscription.status)
+        )
+      }) ?? null
+    )
+  }, [subscriptionQuery])
+
+  const currentProductIndex = useMemo(() => {
+    if (subscriptionQuery.isLoading || productsQuery.isLoading) {
+      return null
+    }
+
+    return productsQuery.data?.data.findIndex(
+      (product) => product.productId === currentProduct?.productId
+    )
+  }, [currentProduct, productsQuery, subscriptionQuery])
+
+  const currentPlanName = useMemo(() => {
     if (!currentProduct) {
-      return 'Free'
+      return null
     }
 
     return currentProduct.name
-  }, [productsQuery, subscriptionQuery])
+  }, [currentProduct])
 
   if (subscriptionQuery.isLoading || productsQuery.isLoading) {
     return <div>Loading...</div>
@@ -110,15 +144,38 @@ export const WorkspaceBillingPlansPageTemplate = () => {
           </div>
         </div>
         <div className="grid grid-cols-1 gap-6 overflow-x-auto md:grid-cols-4">
-          <FreePricingCard subscriptions={subscriptionQuery.data?.data} />
-          {productsQuery.data?.data.map((product) => (
-            <PricingCard
-              key={`pricing-card-${product.productId}`}
-              product={product}
-              subscriptions={subscriptionQuery.data?.data}
-              interval={interval}
-            />
-          ))}
+          {productsQuery.data?.data.map((product, index) => {
+            if (product.name === 'Free') {
+              return (
+                <FreePricingCard
+                  key={`pricing-card-${product.productId}`}
+                  subscriptions={subscriptionQuery.data?.data}
+                  interval={interval}
+                />
+              )
+            }
+
+            let isDowngrade = false
+
+            if (
+              currentProductIndex &&
+              currentSubscription?.status !== 'trialing' &&
+              index < currentProductIndex
+            ) {
+              isDowngrade = true
+            }
+
+            return (
+              <PricingCard
+                key={`pricing-card-${product.productId}`}
+                product={product}
+                subscriptions={subscriptionQuery.data?.data}
+                interval={interval}
+                isDowngrade={isDowngrade}
+                currentSubscription={currentSubscription}
+              />
+            )
+          })}
         </div>
       </div>
     </div>

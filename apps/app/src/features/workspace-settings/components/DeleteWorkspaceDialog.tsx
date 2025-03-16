@@ -55,7 +55,6 @@ export const DeleteWorkspaceDialog = () => {
             loading={isPending}
             onClick={onDeleteOrganization}
             variant="destructive"
-            className="w-full"
           >
             I understand the consequences – delete this workspace!
           </Button>

@@ -16,13 +16,15 @@ const formatter = new Intl.NumberFormat('en-US', {
   maximumFractionDigits: 2,
 })
 
-interface Props {
+export interface PricingCardProps {
+  currentSubscription: SubscriptionsResponse['data'][0] | null
   interval: 'month' | 'year'
+  isDowngrade: boolean
   product: ProductsResponse['data'][0]
   subscriptions?: SubscriptionsResponse['data']
 }
 
-export const PricingCard = (props: Props) => {
+export const PricingCard = (props: PricingCardProps) => {
   const price = props.product.prices.find(
     (price) => price.recurring.interval === props.interval
   )
