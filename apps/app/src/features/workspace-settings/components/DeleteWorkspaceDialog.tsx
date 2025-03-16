@@ -5,6 +5,7 @@ import { useOrganization } from '@clerk/nextjs'
 import { useRouter } from 'next/navigation'
 import {
   AlertDialog,
+  AlertDialogCancel,
   AlertDialogContent,
   AlertDialogFooter,
   AlertDialogHeader,
@@ -49,11 +50,11 @@ export const DeleteWorkspaceDialog = () => {
           </p>
         </div>
         <AlertDialogFooter>
+          <AlertDialogCancel>Cancel</AlertDialogCancel>
           <Button
             loading={isPending}
             onClick={onDeleteOrganization}
             variant="destructive"
-            className="w-full"
           >
             I understand the consequences – delete this workspace!
           </Button>

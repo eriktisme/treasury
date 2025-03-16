@@ -1,17 +1,17 @@
 import { env } from '@/env'
 import { queryOptions } from '@tanstack/react-query'
-import type { SubscriptionsResponse } from '@internal/api-schema/billing'
+import type { ProductsResponse } from '@internal/api-schema/billing'
 import type { GetToken } from '@clerk/types'
 
 interface Options {
   getToken?: GetToken
 }
 
-export const getSubscriptionOptions = (options: Options) =>
-  queryOptions<SubscriptionsResponse>({
-    queryKey: ['subscription'],
+export const getProductOptions = (options: Options) =>
+  queryOptions<ProductsResponse>({
+    queryKey: ['products'],
     queryFn: async () =>
-      fetch(`${env.NEXT_PUBLIC_API_URL}/billing/subscriptions`, {
+      fetch(`${env.NEXT_PUBLIC_API_URL}/billing/products`, {
         credentials: 'include',
         headers: {
           Accept: 'application/json',

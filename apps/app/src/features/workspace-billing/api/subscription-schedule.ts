@@ -2,18 +2,20 @@ import { env } from '@/env'
 import type { MutationConfig } from '@/lib/react-query'
 import { useMutation } from '@tanstack/react-query'
 import type {
-  CheckoutResponse,
-  CreateCheckoutBody,
+  CreateSubscriptionScheduleBody,
+  SubscriptionScheduleResponse,
 } from '@internal/api-schema/billing'
 import { useAuth } from '@clerk/nextjs'
 
 type Options = {
   mutationConfig?: MutationConfig<
-    (body: CreateCheckoutBody) => Promise<CheckoutResponse>
+    (
+      body: CreateSubscriptionScheduleBody
+    ) => Promise<SubscriptionScheduleResponse>
   >
 }
 
-export const useCreateCheckoutSession = ({ mutationConfig }: Options) => {
+export const useCreateSubscriptionSchedule = ({ mutationConfig }: Options) => {
   const { onSuccess, ...restConfig } = mutationConfig ?? {}
 
   const { getToken } = useAuth()
@@ -23,8 +25,8 @@ export const useCreateCheckoutSession = ({ mutationConfig }: Options) => {
       onSuccess?.(...args)
     },
     ...restConfig,
-    mutationFn: async (body: CreateCheckoutBody) =>
-      fetch(`${env.NEXT_PUBLIC_API_URL}/billing/checkouts`, {
+    mutationFn: async (body: CreateSubscriptionScheduleBody) =>
+      fetch(`${env.NEXT_PUBLIC_API_URL}/billing/subscription-schedule`, {
         credentials: 'include',
         headers: {
           Accept: 'application/json',

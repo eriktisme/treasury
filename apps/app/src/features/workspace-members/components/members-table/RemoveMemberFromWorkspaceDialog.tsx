@@ -2,6 +2,7 @@
 
 import {
   AlertDialog,
+  AlertDialogCancel,
   AlertDialogContent,
   AlertDialogFooter,
   AlertDialogHeader,
@@ -41,6 +42,7 @@ export const RemoveMemberFromWorkspace = (props: Props) => {
           <p>Are you sure you want to remove this user from the workspace?</p>
         </div>
         <AlertDialogFooter>
+          <AlertDialogCancel>Cancel</AlertDialogCancel>
           <Button
             onClick={async () => {
               await props.member.destroy()
@@ -48,7 +50,6 @@ export const RemoveMemberFromWorkspace = (props: Props) => {
               await props.onWorkspaceMemberRemoved?.()
             }}
             variant="destructive"
-            className="w-full"
           >
             Remove member
           </Button>

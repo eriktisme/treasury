@@ -6,32 +6,11 @@ import type {
   PortalResponse,
 } from '@internal/api-schema/billing'
 import { useAuth } from '@clerk/nextjs'
-import type { GetToken } from '@clerk/types'
-
-interface CreatePortalSessionOptions {
-  getToken: GetToken
-}
-
-const createPortalSession = async (
-  body: CreatePortalBody,
-  options: CreatePortalSessionOptions
-): Promise<PortalResponse> => {
-  const response = await fetch(`${env.NEXT_PUBLIC_API_URL}/billing/portal`, {
-    credentials: 'include',
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${await options.getToken()}`,
-    },
-    method: 'POST',
-    body: JSON.stringify(body),
-  })
-
-  return response.json()
-}
 
 type Options = {
-  mutationConfig?: MutationConfig<typeof createPortalSession>
+  mutationConfig?: MutationConfig<
+    (body: CreatePortalBody) => Promise<PortalResponse>
+  >
 }
 
 export const useCreatePortalSession = ({ mutationConfig }: Options) => {
@@ -45,6 +24,15 @@ export const useCreatePortalSession = ({ mutationConfig }: Options) => {
     },
     ...restConfig,
     mutationFn: async (body: CreatePortalBody) =>
-      createPortalSession(body, { getToken }),
+      fetch(`${env.NEXT_PUBLIC_API_URL}/billing/portal`, {
+        credentials: 'include',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${await getToken()}`,
+        },
+        method: 'POST',
+        body: JSON.stringify(body),
+      }).then((res) => res.json()),
   })
 }

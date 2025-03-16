@@ -203,13 +203,13 @@ export const getStripeSubscriptionById = new PreparedQuery<
   IGetStripeSubscriptionByIdResult
 >(getStripeSubscriptionByIdIR)
 
-/** 'GetStripeSubscriptionByWorkspaceId' parameters type */
-export interface IGetStripeSubscriptionByWorkspaceIdParams {
+/** 'GetStripeSubscriptionsByWorkspaceId' parameters type */
+export interface IGetStripeSubscriptionsByWorkspaceIdParams {
   workspaceId: string
 }
 
-/** 'GetStripeSubscriptionByWorkspaceId' return type */
-export interface IGetStripeSubscriptionByWorkspaceIdResult {
+/** 'GetStripeSubscriptionsByWorkspaceId' return type */
+export interface IGetStripeSubscriptionsByWorkspaceIdResult {
   canceled_at: Date | null
   canceled_at_period_end: Date | null
   created_at: Date
@@ -227,13 +227,13 @@ export interface IGetStripeSubscriptionByWorkspaceIdResult {
   workspace_id: string
 }
 
-/** 'GetStripeSubscriptionByWorkspaceId' query type */
-export interface IGetStripeSubscriptionByWorkspaceIdQuery {
-  params: IGetStripeSubscriptionByWorkspaceIdParams
-  result: IGetStripeSubscriptionByWorkspaceIdResult
+/** 'GetStripeSubscriptionsByWorkspaceId' query type */
+export interface IGetStripeSubscriptionsByWorkspaceIdQuery {
+  params: IGetStripeSubscriptionsByWorkspaceIdParams
+  result: IGetStripeSubscriptionsByWorkspaceIdResult
 }
 
-const getStripeSubscriptionByWorkspaceIdIR: any = {
+const getStripeSubscriptionsByWorkspaceIdIR: any = {
   usedParamSet: { workspaceId: true },
   params: [
     {
@@ -259,7 +259,71 @@ const getStripeSubscriptionByWorkspaceIdIR: any = {
  * WHERE s.workspace_id = :workspaceId!
  * ```
  */
-export const getStripeSubscriptionByWorkspaceId = new PreparedQuery<
-  IGetStripeSubscriptionByWorkspaceIdParams,
-  IGetStripeSubscriptionByWorkspaceIdResult
->(getStripeSubscriptionByWorkspaceIdIR)
+export const getStripeSubscriptionsByWorkspaceId = new PreparedQuery<
+  IGetStripeSubscriptionsByWorkspaceIdParams,
+  IGetStripeSubscriptionsByWorkspaceIdResult
+>(getStripeSubscriptionsByWorkspaceIdIR)
+
+/** 'GetCurrentStripeSubscriptionsByWorkspaceId' parameters type */
+export interface IGetCurrentStripeSubscriptionsByWorkspaceIdParams {
+  workspaceId: string
+}
+
+/** 'GetCurrentStripeSubscriptionsByWorkspaceId' return type */
+export interface IGetCurrentStripeSubscriptionsByWorkspaceIdResult {
+  canceled_at: Date | null
+  canceled_at_period_end: Date | null
+  created_at: Date
+  current_period_end: Date
+  current_period_start: Date
+  customer_id: string
+  id: string
+  metadata: Json | null
+  price_id: string
+  product_id: string
+  quantity: number | null
+  status: string | null
+  trial_period_end: Date | null
+  trial_period_start: Date | null
+  workspace_id: string
+}
+
+/** 'GetCurrentStripeSubscriptionsByWorkspaceId' query type */
+export interface IGetCurrentStripeSubscriptionsByWorkspaceIdQuery {
+  params: IGetCurrentStripeSubscriptionsByWorkspaceIdParams
+  result: IGetCurrentStripeSubscriptionsByWorkspaceIdResult
+}
+
+const getCurrentStripeSubscriptionsByWorkspaceIdIR: any = {
+  usedParamSet: { workspaceId: true },
+  params: [
+    {
+      name: 'workspaceId',
+      required: true,
+      transform: { type: 'scalar' },
+      locs: [{ a: 204, b: 216 }],
+    },
+  ],
+  statement:
+    'SELECT\n  s.*,\n  product.id as product_id\nFROM stripe_subscriptions s\nJOIN stripe_prices price ON s.price_id = price.id\nJOIN stripe_products product ON price.product_id = product.id\nWHERE s.workspace_id = :workspaceId!\nAND (s.canceled_at IS NULL OR s.canceled_at <= NOW())\nORDER BY s.current_period_start ASC\nLIMIT 1',
+}
+
+/**
+ * Query generated from SQL:
+ * ```
+ * SELECT
+ *   s.*,
+ *   product.id as product_id
+ * FROM stripe_subscriptions s
+ * JOIN stripe_prices price ON s.price_id = price.id
+ * JOIN stripe_products product ON price.product_id = product.id
+ * WHERE s.workspace_id = :workspaceId!
+ * AND (s.canceled_at IS NULL OR s.canceled_at <= NOW())
+ * ORDER BY s.current_period_start ASC
+ * LIMIT 1
+ * ```
+ */
+export const getCurrentStripeSubscriptionsByWorkspaceId = new PreparedQuery<
+  IGetCurrentStripeSubscriptionsByWorkspaceIdParams,
+  IGetCurrentStripeSubscriptionsByWorkspaceIdResult
+>(getCurrentStripeSubscriptionsByWorkspaceIdIR)

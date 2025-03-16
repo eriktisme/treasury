@@ -3,14 +3,16 @@
 import { Button } from '@internal/design-system/components/ui/button'
 import { useCreateCheckoutSession } from '../api'
 import { useOrganization } from '@clerk/nextjs'
-import { usePathname } from 'next/navigation'
 import { env } from '@/env'
 import { loadStripe } from '@stripe/stripe-js'
+import type { ProductsResponse } from '@internal/api-schema/billing'
 
-export const UpgradePlan = () => {
+interface Props {
+  price?: ProductsResponse['data'][0]['prices'][0]
+}
+
+export const UpgradePlan = (props: Props) => {
   const { organization } = useOrganization()
-
-  const pathname = usePathname()
 
   const createCheckoutSession = useCreateCheckoutSession({
     mutationConfig: {
@@ -29,9 +31,10 @@ export const UpgradePlan = () => {
       loading={createCheckoutSession.isPending}
       onClick={() => {
         createCheckoutSession.mutate({
-          callbackUrl: `https://${env.NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL}/${pathname}`,
+          callbackUrl: `https://${env.NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL}/settings/billing`,
+          lookupKey: props.price?.lookupKey ?? 'basic_monthly',
           quantity: organization?.membersCount ?? 1,
-          lookupKey: 'basic_monthly',
+          trial: false,
         })
       }}
     >
