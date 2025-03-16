@@ -1,3 +1,5 @@
+'use client'
+
 import { Button } from '@internal/design-system/components/ui/button'
 import { useCreatePortalSession } from '../api'
 import { env } from '@/env'

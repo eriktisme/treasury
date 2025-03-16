@@ -1,8 +1,16 @@
 import { createRoute, OpenAPIHono } from '@hono/zod-openapi'
 import type { Bindings } from '@/bindings'
-import { CreateSubscriptionBody, Subscription, SubscriptionsSchema } from '@internal/api-schema/billing'
+import {
+  CreateSubscriptionBody,
+  Subscription,
+  SubscriptionsSchema,
+} from '@internal/api-schema/billing'
 import { getAuth } from '@hono/clerk-auth'
-import { BadRequestErrorSchema, InternalErrorSchema, NotAuthorizedErrorSchema } from '@/shared/schema'
+import {
+  BadRequestErrorSchema,
+  InternalErrorSchema,
+  NotAuthorizedErrorSchema,
+} from '@/shared/schema'
 import {
   getCurrentStripeSubscriptionsByWorkspaceId,
   upsertStripeSubscription,
@@ -219,20 +227,28 @@ app.openapi(post, async (c) => {
     )
   }
 
-  const [customer] = await getStripeCustomerByWorkspaceId.run({ workspaceId: auth.orgId }, pool)
-
+  const [customer] = await getStripeCustomerByWorkspaceId.run(
+    { workspaceId: auth.orgId },
+    pool
+  )
 
   const body = c.req.valid('json')
 
-  const [price] = await getStripePriceByLookupKey.run({key: body.lookupKey}, pool)
+  const [price] = await getStripePriceByLookupKey.run(
+    { key: body.lookupKey },
+    pool
+  )
 
   if (!price) {
-    return c.json({
-      code: 'invalid_price',
-      type: 'invalid_request_error',
-      status_code: 400,
-      request_id: lambdaContext.awsRequestId,
-    }, 400)
+    return c.json(
+      {
+        code: 'invalid_price',
+        type: 'invalid_request_error',
+        status_code: 400,
+        request_id: lambdaContext.awsRequestId,
+      },
+      400
+    )
   }
 
   const stripeSubscription = await stripe.subscriptions.create({
@@ -243,23 +259,28 @@ app.openapi(post, async (c) => {
       },
     ],
     trial_period_days: body.trial ? DEFAULT_TRIAL_PERIOD : undefined,
-    trial_settings: body.trial ? {
-      end_behavior: {
-        missing_payment_method: 'cancel',
-      }
-    }: undefined,
+    trial_settings: body.trial
+      ? {
+          end_behavior: {
+            missing_payment_method: 'cancel',
+          },
+        }
+      : undefined,
   })
 
   if (!stripeSubscription) {
-    return c.json({
-      code: 'internal_error',
-      type: 'internal_error',
-      status_code: 500,
-      request_id: lambdaContext.awsRequestId,
-    }, 500)
+    return c.json(
+      {
+        code: 'internal_error',
+        type: 'internal_error',
+        status_code: 500,
+        request_id: lambdaContext.awsRequestId,
+      },
+      500
+    )
   }
 
-  const [subscription] =await upsertStripeSubscription.run(
+  const [subscription] = await upsertStripeSubscription.run(
     {
       subscription: {
         canceledAt: stripeSubscription.canceled_at
@@ -269,8 +290,12 @@ app.openapi(post, async (c) => {
           ? new Date(stripeSubscription.current_period_end * 1000)
           : null,
         createdAt: new Date(stripeSubscription.created * 1000),
-        currentPeriodEnd: new Date(stripeSubscription.current_period_end * 1000),
-        currentPeriodStart: new Date(stripeSubscription.current_period_start * 1000),
+        currentPeriodEnd: new Date(
+          stripeSubscription.current_period_end * 1000
+        ),
+        currentPeriodStart: new Date(
+          stripeSubscription.current_period_start * 1000
+        ),
         customerId: customer.id,
         id: stripeSubscription.id,
         metadata: stripeSubscription.metadata,
@@ -290,12 +315,15 @@ app.openapi(post, async (c) => {
   )
 
   if (!subscription) {
-    return c.json({
-      code: 'internal_error',
-      type: 'internal_error',
-      status_code: 500,
-      request_id: lambdaContext.awsRequestId,
-    }, 500)
+    return c.json(
+      {
+        code: 'internal_error',
+        type: 'internal_error',
+        status_code: 500,
+        request_id: lambdaContext.awsRequestId,
+      },
+      500
+    )
   }
 
   const response = Subscription.safeParse({
