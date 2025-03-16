@@ -122,7 +122,7 @@ app.openapi(post, async (c) => {
     )
   }
 
-  const body = await c.req.valid('json')
+  const body = c.req.valid('json')
 
   const [price] = await getStripePriceByLookupKey.run(
     {
@@ -152,14 +152,12 @@ app.openapi(post, async (c) => {
       existingSubscription,
       price,
       subscription,
-      quantity: body.quantity,
     })
   } else {
     await handleUpgradingSubscription({
       existingSubscription,
       price,
       subscription,
-      quantity: body.quantity,
     })
   }
 
@@ -194,11 +192,12 @@ app.openapi(post, async (c) => {
 interface HandleSubscriptionParams {
   existingSubscription: Stripe.Subscription
   price: IGetStripePriceByLookupKeyResult
-  quantity: number
   subscription: IGetCurrentStripeSubscriptionsByWorkspaceIdResult
 }
 
 async function handleDowngradingSubscription(params: HandleSubscriptionParams) {
+  const quantity = params.existingSubscription.items.data[0].quantity ?? 1
+
   if (!params.existingSubscription.schedule) {
     await stripe.subscriptionSchedules.create({
       from_subscription: params.subscription.id,
@@ -211,7 +210,7 @@ async function handleDowngradingSubscription(params: HandleSubscriptionParams) {
           end_date: params.existingSubscription.current_period_end,
         },
         {
-          items: [{ price: params.price.id, quantity: params.quantity }],
+          items: [{ price: params.price.id, quantity }],
         },
       ],
     })
@@ -234,7 +233,7 @@ async function handleDowngradingSubscription(params: HandleSubscriptionParams) {
           end_date: params.existingSubscription.current_period_end,
         },
         {
-          items: [{ price: params.price.id, quantity: params.quantity }],
+          items: [{ price: params.price.id, quantity }],
         },
       ],
     }
@@ -242,12 +241,14 @@ async function handleDowngradingSubscription(params: HandleSubscriptionParams) {
 }
 
 async function handleUpgradingSubscription(params: HandleSubscriptionParams) {
+  const quantity = params.existingSubscription.items.data[0].quantity ?? 1
+
   if (!params.existingSubscription.schedule) {
     await stripe.subscriptionSchedules.create({
       from_subscription: params.subscription.id,
       phases: [
         {
-          items: [{ price: params.price.id, quantity: params.quantity }],
+          items: [{ price: params.price.id, quantity }],
           proration_behavior: 'create_prorations',
         },
       ],
@@ -263,7 +264,7 @@ async function handleUpgradingSubscription(params: HandleSubscriptionParams) {
     {
       phases: [
         {
-          items: [{ price: params.price.id, quantity: params.quantity }],
+          items: [{ price: params.price.id, quantity }],
           start_date: 'now',
           proration_behavior: 'create_prorations',
         },
