@@ -56,16 +56,22 @@ WITH
 			active_products ap
 			JOIN stripe_prices p ON p.product_id = ap.id
 		GROUP BY ap.id, ap.name
-	)
+	),
+    sorted_products_with_prices AS (
+        SELECT
+            *
+        FROM
+            products_with_prices
+        ORDER BY unit_amount ASC
+    )
 
 SELECT
-	*
-FROM
-	products_with_prices
+  *
+FROM sorted_products_with_prices
 
 UNION ALL
 
 SELECT
-	*
+  *
 FROM
-	products_without_prices;
+    products_without_prices;

@@ -191,7 +191,7 @@ const getStripeProductsWithPricesByStatusIR: any = {
     },
   ],
   statement:
-    'WITH\n\tactive_products AS (\n\t\tSELECT\n\t\t\t*\n\t\tFROM\n\t\t\tstripe_products p\n\t\tWHERE\n\t\t\tactive = :active!\n\t),\n\tproducts_without_prices AS (\n\t\tSELECT\n\t\t\tap.id AS id,\n\t\t\tap.name AS name,\n\t\t\t0 as unit_amount\n\t\tFROM\n\t\t\tactive_products ap\n\t\t\tLEFT JOIN stripe_prices p ON p.product_id = ap.id\n\t\tWHERE\n\t\t\tp.product_id IS NULL\n\t\tGROUP BY ap.id, ap.name\n\t),\n\tproducts_with_prices AS (\n\t\tSELECT\n\t\t\tap.id AS id,\n\t\t\tap.name AS name,\n\t\t\tMIN(p.unit_amount) as unit_amount\n\t\tFROM\n\t\t\tactive_products ap\n\t\t\tJOIN stripe_prices p ON p.product_id = ap.id\n\t\tGROUP BY ap.id, ap.name\n\t)\n\nSELECT\n\t*\nFROM\n\tproducts_with_prices\n\nUNION ALL\n\nSELECT\n\t*\nFROM\n\tproducts_without_prices',
+    'WITH\n\tactive_products AS (\n\t\tSELECT\n\t\t\t*\n\t\tFROM\n\t\t\tstripe_products p\n\t\tWHERE\n\t\t\tactive = :active!\n\t),\n\tproducts_without_prices AS (\n\t\tSELECT\n\t\t\tap.id AS id,\n\t\t\tap.name AS name,\n\t\t\t0 as unit_amount\n\t\tFROM\n\t\t\tactive_products ap\n\t\t\tLEFT JOIN stripe_prices p ON p.product_id = ap.id\n\t\tWHERE\n\t\t\tp.product_id IS NULL\n\t\tGROUP BY ap.id, ap.name\n\t),\n\tproducts_with_prices AS (\n\t\tSELECT\n\t\t\tap.id AS id,\n\t\t\tap.name AS name,\n\t\t\tMIN(p.unit_amount) as unit_amount\n\t\tFROM\n\t\t\tactive_products ap\n\t\t\tJOIN stripe_prices p ON p.product_id = ap.id\n\t\tGROUP BY ap.id, ap.name\n\t),\n    sorted_products_with_prices AS (\n        SELECT\n            *\n        FROM\n            products_with_prices\n        ORDER BY unit_amount ASC\n    )\n\nSELECT\n  *\nFROM sorted_products_with_prices\n\nUNION ALL\n\nSELECT\n  *\nFROM\n    products_without_prices',
 }
 
 /**
@@ -227,19 +227,25 @@ const getStripeProductsWithPricesByStatusIR: any = {
  * 			active_products ap
  * 			JOIN stripe_prices p ON p.product_id = ap.id
  * 		GROUP BY ap.id, ap.name
- * 	)
+ * 	),
+ *     sorted_products_with_prices AS (
+ *         SELECT
+ *             *
+ *         FROM
+ *             products_with_prices
+ *         ORDER BY unit_amount ASC
+ *     )
  *
  * SELECT
- * 	*
- * FROM
- * 	products_with_prices
+ *   *
+ * FROM sorted_products_with_prices
  *
  * UNION ALL
  *
  * SELECT
- * 	*
+ *   *
  * FROM
- * 	products_without_prices
+ *     products_without_prices
  * ```
  */
 export const getStripeProductsWithPricesByStatus = new PreparedQuery<
