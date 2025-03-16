@@ -5,10 +5,6 @@ import type {
   CreateSubscriptionScheduleBody,
   SubscriptionScheduleResponse,
 } from '@internal/api-schema/billing'
-import {
-  CheckoutResponse,
-  CreateCheckoutBody,
-} from '@internal/api-schema/billing'
 import { useAuth } from '@clerk/nextjs'
 
 type Options = {

@@ -11,7 +11,9 @@ export const CreateSubscriptionScheduleBody = z.object({
   }),
 })
 
-export type CreateSubscriptionScheduleBody = z.infer<typeof CreateSubscriptionScheduleBody>
+export type CreateSubscriptionScheduleBody = z.infer<
+  typeof CreateSubscriptionScheduleBody
+>
 
 export const SubscriptionSchedule = z.object({
   subscriptionId: z.string().openapi({
