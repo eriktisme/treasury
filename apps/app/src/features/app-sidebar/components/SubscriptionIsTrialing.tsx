@@ -51,7 +51,7 @@ export const SubscriptionIsTrialing = () => {
     <Tooltip>
       <TooltipTrigger asChild>
         <Link href={`/${organization?.slug}/settings/billing`}>
-          <Badge variant="default">
+          <Badge variant="default" className="w-full cursor-pointer py-1.5">
             <CircleAlert className="mr-2 size-4" />
             <span>
               {currentProduct.name} trial ends in{' '}
