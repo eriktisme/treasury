@@ -1,5 +1,6 @@
 import { TooltipProvider } from './components/ui/tooltip'
-import { ThemeProvider, ThemeProviderProps } from 'next-themes'
+import type { ThemeProviderProps } from 'next-themes'
+import { ThemeProvider } from 'next-themes'
 import { Toaster } from '@internal/design-system/components/ui/sonner'
 
 interface Props extends ThemeProviderProps {

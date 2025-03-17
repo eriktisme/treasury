@@ -13,7 +13,7 @@ import { MoonIcon, SunIcon } from 'lucide-react'
 const themes = [{ label: 'Light', value: 'light' }]
 
 export const ThemeToggle = () => {
-  const { setTheme, theme } = useTheme()
+  const { setTheme } = useTheme()
 
   return (
     <DropdownMenu>
