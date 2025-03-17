@@ -7,7 +7,7 @@ import {
 } from '@internal/design-system/components/ui/dialog'
 import { Button } from '@internal/design-system/components/ui/button'
 import { useCurrentSubscription } from '@/context-store'
-import { useCreateSubscription } from '@/features/workspace-billing'
+import { useCreateSubscription } from '../api'
 import { useOrganization } from '@clerk/nextjs'
 
 export const UpgradeToPaidPlanDialog = () => {

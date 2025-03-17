@@ -8,7 +8,7 @@ import type { SubscriptionsResponse } from '@internal/api-schema/billing'
 import { Button } from '@internal/design-system/components/ui/button'
 import { PricingCardContent } from './PricingCardContent'
 import { useMemo } from 'react'
-import { DowngradePlan } from './DowngradePlan'
+import { DowngradePlanAlertDialog } from './DowngradePlanAlertDialog'
 
 interface Props {
   interval: 'month' | 'year'
@@ -39,7 +39,7 @@ export const FreePricingCard = (props: Props) => {
           </div>
         </div>
         {hasActiveSubscription ? (
-          <DowngradePlan
+          <DowngradePlanAlertDialog
             lookupKey={`free_${props.interval === 'year' ? 'yearly' : 'monthly'}`}
           />
         ) : (

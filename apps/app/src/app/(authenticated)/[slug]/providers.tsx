@@ -7,6 +7,7 @@ import { useQueries } from '@tanstack/react-query'
 import {
   getProductOptions,
   getSubscriptionOptions,
+  TrialExpiredDialog,
   UpgradeToPaidPlanDialog,
 } from '@/features/workspace-billing'
 import { queryConfig } from '@/lib/react-query'
@@ -48,6 +49,7 @@ export const Providers = ({
     >
       {children}
       <UpgradeToPaidPlanDialog />
+      <TrialExpiredDialog />
     </CurrentSubscriptionContext>
   )
 }
