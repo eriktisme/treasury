@@ -14,7 +14,7 @@ interface Props {
   lookupKey: string
 }
 
-export const DowngradePlan = (props: Props) => {
+export const DowngradePlanAlertDialog = (props: Props) => {
   const createSubscriptionSchedule = useCreateSubscriptionSchedule({
     mutationConfig: {
       onSuccess: () => {

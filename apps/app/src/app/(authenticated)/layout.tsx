@@ -2,6 +2,7 @@ import 'server-only'
 
 import type { ReactNode } from 'react'
 import { auth, currentUser } from '@clerk/nextjs/server'
+import { Providers } from './providers'
 
 export default async function Layout({
   children,
@@ -17,5 +18,5 @@ export default async function Layout({
     return
   }
 
-  return <>{children}</>
+  return <Providers>{children}</Providers>
 }

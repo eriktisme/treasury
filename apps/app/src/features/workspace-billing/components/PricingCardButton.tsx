@@ -2,7 +2,7 @@ import { Button } from '@internal/design-system/components/ui/button'
 import { UpgradePlan } from './UpgradePlan'
 import { FreeTrialPlan } from './FreeTrialPlan'
 import { useMemo } from 'react'
-import { DowngradePlan } from './DowngradePlan'
+import { DowngradePlanAlertDialog } from './DowngradePlanAlertDialog'
 import type { PricingCardProps } from './PricingCard'
 import { formatDistanceToNow } from 'date-fns'
 
@@ -68,7 +68,7 @@ export const PricingCardButton = (props: PricingCardProps) => {
   }
 
   if (props.isDowngrade && price) {
-    return <DowngradePlan lookupKey={price.lookupKey!} />
+    return <DowngradePlanAlertDialog lookupKey={price.lookupKey!} />
   }
 
   return (

@@ -1,13 +1,14 @@
 import {
   Sidebar,
   SidebarContent,
+  SidebarFooter,
   SidebarGroup,
   SidebarHeader,
-  SidebarRail,
 } from '@internal/design-system/components/ui/sidebar'
 import type { ComponentProps } from 'react'
 import { WorkspaceSwitcher } from './WorkspaceSwitcher'
 import type { Organization, User } from '@clerk/backend'
+import { SubscriptionIsTrialing } from './SubscriptionIsTrialing'
 
 interface Props extends ComponentProps<typeof Sidebar> {
   user: User | null
@@ -23,7 +24,11 @@ export const AppSidebar = ({ user, workspaces, ...props }: Props) => {
       <SidebarContent>
         <SidebarGroup>{/* Placeholder */}</SidebarGroup>
       </SidebarContent>
-      <SidebarRail />
+      <SidebarFooter>
+        <div>
+          <SubscriptionIsTrialing />
+        </div>
+      </SidebarFooter>
     </Sidebar>
   )
 }
