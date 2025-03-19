@@ -64,7 +64,7 @@ export const buildHandler = async (
   })
 
   await clerk.organizations.updateOrganization(event.detail.id, {
-    publicMetadata: {
+    privateMetadata: {
       stripeCustomerId: customer.id,
     },
   })
