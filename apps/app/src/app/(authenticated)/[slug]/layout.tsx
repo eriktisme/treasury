@@ -1,7 +1,6 @@
 import type { ReactNode } from 'react'
 import { auth, clerkClient } from '@clerk/nextjs/server'
 import { notFound } from 'next/navigation'
-import { Providers } from './providers'
 
 const client = await clerkClient()
 
@@ -57,7 +56,7 @@ export default async function Layout(
 
     if (err.message === 'Not a member of this organization') {
       if (isSuperAdmin) {
-        return <Providers>{props.children}</Providers>
+        return <>{props.children}</>
       }
 
       return notFound()
@@ -70,5 +69,5 @@ export default async function Layout(
     throw err
   }
 
-  return <Providers>{props.children}</Providers>
+  return <>{props.children}</>
 }

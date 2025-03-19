@@ -8,6 +8,7 @@ import { clerkClient, currentUser } from '@clerk/nextjs/server'
 import type { Organization } from '@clerk/backend'
 import { HotKeys } from '@/features/hot-keys'
 import { SyncActiveOrganizationFromURLToSession } from '@/lib/sync-active-workspace-from-url-to-session'
+import { Providers } from './providers'
 
 const client = await clerkClient()
 
@@ -31,7 +32,7 @@ export default async function Layout({
   )
 
   return (
-    <>
+    <Providers>
       <SidebarProvider>
         <AppSidebar
           workspaces={workspaces}
@@ -43,6 +44,6 @@ export default async function Layout({
       </SidebarProvider>
       <HotKeys />
       <SyncActiveOrganizationFromURLToSession />
-    </>
+    </Providers>
   )
 }
