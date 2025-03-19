@@ -23,21 +23,51 @@ export default async function Layout(
     return
   }
 
-  const organization = await client.organizations.getOrganization({
-    slug: params.slug,
-  })
+  const user = await client.users.getUser(userId)
 
-  const memberships = await client.users.getOrganizationMembershipList({
-    limit: 500,
-    userId,
-  })
+  if (!user) {
+    redirectToSignIn()
 
-  if (
-    !memberships.data.some(
-      (membership) => membership.organization.id === organization.id
-    )
-  ) {
-    notFound()
+    return
+  }
+
+  const { isSuperAdmin = false } = user.publicMetadata as {
+    isSuperAdmin?: boolean
+  }
+
+  try {
+    const organization = await client.organizations.getOrganization({
+      slug: params.slug,
+    })
+
+    const memberships = await client.users.getOrganizationMembershipList({
+      limit: 500,
+      userId,
+    })
+
+    if (
+      !memberships.data.some(
+        (membership) => membership.organization.id === organization.id
+      )
+    ) {
+      throw new Error('Not a member of this organization')
+    }
+  } catch (e) {
+    const err = e as Error
+
+    if (err.message === 'Not a member of this organization') {
+      if (isSuperAdmin) {
+        return <Providers>{props.children}</Providers>
+      }
+
+      return notFound()
+    }
+
+    if (err.message === 'Not Found') {
+      return notFound()
+    }
+
+    throw err
   }
 
   return <Providers>{props.children}</Providers>
