@@ -11,6 +11,5 @@
       "./node_modules/@types"
     ]
   },
-  "include": ["bin", "lib", "src"],
-  "exclude": ["cdk.out", "node_modules"]
+  "include": ["bin", "lib", "constructs", "src"]
 }

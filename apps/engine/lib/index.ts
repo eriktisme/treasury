@@ -4,6 +4,7 @@ import { Stack } from '@internal/cdk-utils/stack'
 import { Archive, EventBus } from 'aws-cdk-lib/aws-events'
 import { StringParameter } from 'aws-cdk-lib/aws-ssm'
 import { EventConsumer } from '@internal/cdk-utils/event-consumer'
+import { PersistEvents } from '../constructs/persist-events'
 
 export interface EngineProps extends StackProps {
   clerk: {
@@ -41,6 +42,10 @@ export class Engine extends Stack {
     new StringParameter(this, 'event-bus-arn', {
       parameterName: `/engine/${props.stage}/event-bus-arn`,
       stringValue: eventBus.eventBusArn,
+    })
+
+    new PersistEvents(this, 'persist-events', {
+      eventBus,
     })
 
     new EventConsumer(this, 'create-stripe-customer', {
