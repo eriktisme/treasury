@@ -1,15 +1,12 @@
 {
-  "name": "@internal/api-schema",
-  "version": "0.1.0",
+  "name": "@internal/{{ name }}",
   "private": true,
+  "version": "0.0.0",
   "scripts": {
-    "lint": "eslint '**/*.{ts,tsx}'",
+    "lint": "eslint '**/*.ts'",
     "typeCheck": "tsc --noEmit --emitDeclarationOnly false"
   },
   "devDependencies": {
     "@internal/tsconfig": "workspace:*"
-  },
-  "dependencies": {
-    "@hono/zod-openapi": "^0.18.4"
   }
 }

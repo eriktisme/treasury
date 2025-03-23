@@ -7,10 +7,10 @@
   "scripts": {
     "build": "tsc --noEmit",
     "cdk": "cdk",
-    "lint": "eslint '**/*.ts'",
+    "lint": "eslint '**/*.{ts,tsx}'",
     "test": "jest --passWithNoTests",
     "test-coverage": "jest --coverage --passWithNoTests",
-    "typeCheck": "tsc --noEmit",
+    "typeCheck": "tsc --noEmit --emitDeclarationOnly false",
     "watch": "tsc -w"
   },
   "devDependencies": {
